@@ -51,7 +51,7 @@ const Login = (props) => {
           setLoading(false);
 
           if(!json.error){
-             localStorage.setItem("token", JSON.stringify(json.logindata.authtoken));
+             localStorage.setItem("token", JSON.stringify(json.logindata));
              localStorage.setItem("token2", JSON.stringify(json.token));
             console.log(json);
             alert("Login Successful");
