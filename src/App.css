@@ -1,0 +1,429 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+#sidebarbody{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  
+}
+.offcanvas-body{
+  scrollbar-width: thin;
+  scrollbar-color: black;
+
+}
+.offcanvas-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.offcanvas-body::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 4px;
+}
+
+.offcanvas-body::-webkit-scrollbar-thumb:hover {
+  background-color: #333; /* Darker color on hover */
+}
+
+.offcanvas-body::-webkit-scrollbar-track {
+  background-color: black; /* Lighter color for the track */
+}
+#nav_button{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#home_page{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#signuppage{
+  /* background-color: #61dafb; */
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#spg div input{
+  border: 2px solid green;
+  border-radius: 0px;
+}
+.login{
+  width: 40%;
+}
+.flex{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+#spg_btn{
+  background-color: black;
+}
+#spg_btn:hover{
+  border: 2px solid black;
+  background-color: greenyellow;
+  scale: 1.03;
+  color: black;
+}
+body{
+  overflow-x: none;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F0F2F5;
+}
+/* .app{
+  
+  transform: scale(0.8);
+  transform-origin: top left;
+  height: 125%;
+  width: 125%;
+
+} */
+.card-bodyclass:hover{
+  transition: 0.2s;
+  border: 2px solid black;
+  scale: 1.08;
+  color: black;
+  z-index: +1;
+}
+.studentcard:hover{
+  transition: 0.2s;
+  border: 2px solid black;
+  scale: 1.04;
+  color: black;
+  /* z-index: +1; */
+} 
+.fa-plus:hover{
+  scale:1.1;
+  cursor: pointer;
+}
+
+.anobox{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.anotitlesmall{
+  width: 27%;
+}
+.notibigbox{
+  padding-left: 90px;
+}
+.btnlib{
+  min-width: 200px;
+}
+.feedtext{
+  font-size: calc(15px + 0.1vw);
+
+}
+.feedtext2{
+  font-size: calc(12px + 0.1vw);
+
+}
+.feedform{
+  width: 40%;
+}
+.feedform form{
+  margin-left:35px
+}
+.daysgrid{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  /* justify-content: space-around; */
+  /* height: calc(100% - 75px);
+  grid-template-rows: repeat(5, 1fr); */
+}
+.datesgrid{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  /* justify-content: space-around; */
+  /* height: calc(100% - 75px);
+  grid-template-rows: repeat(5, 1fr); */
+}
+.students{
+  width: 40%;
+
+}
+.announcements{
+  /* min-width: 350px; */
+  width: 27%;
+  margin-left: 10px;
+}
+.assignment{
+  /* min-width: 300px; */
+  width: 27%;
+  margin-left: 10px;
+}
+.announcements{
+  /* min-width: 350px; */
+  width: 27%;
+}
+.assignment{
+  /* min-width: 300px; */
+  width: 27%;
+}
+.astuatten{
+  overflow-y: scroll;
+}
+#scrolldiv div h4 span{
+  font-size: calc(16px + 0.1vw);
+}
+.type1box div{
+  margin-left: 10px;
+}
+.ura{
+  width: 36%;
+}
+#spg{
+  width: 50vw;
+}
+.bg{
+  /* width: calc(100vw - 75px); */
+  transition: all 0.3s ease 0s;
+  position: relative;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
+}
+.bg2{
+  margin-left: 4.3%;
+}
+.fa-arrow-left{
+right: 10px;
+}
+.fa-arrow-right{
+right: 10px;
+}
+.logout{
+  cursor: pointer;
+}
+.logout:hover{
+  /* color: red; */
+  background-color: red;
+  color: white;
+
+}
+
+
+@media screen and (max-width: 1400px) {
+  .announcements{
+    min-width: none;
+    width: 100%;
+    margin: 0px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+  }
+  .assignment{
+    min-width: none;
+    width: 100%;
+   
+    margin-left: 10px;
+    margin-right: 10px;
+    margin: 0px;
+    margin-top: 20px;
+  }
+  .students{
+    min-width: none;
+    width: 100%;
+    margin-top: 10px;
+    margin: 0px;
+
+  
+  
+  }
+  .fa-arrow-left{
+    display: none;
+    }
+    .fa-arrow-right{
+    display: none;
+    }
+  
+}
+
+@media screen and (max-width: 1100px) {
+ 
+.feedleft{
+  display: none;
+}
+.feedform{
+  width: 100%;
+  /* margin-left: -40px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.feedform form{
+  /* width: 100%; */
+  /* margin-left: -40px; */
+  margin-left: 0px;
+}
+.sidetextbar2{
+  display: none;
+  }
+  .type1box{
+    flex-wrap: wrap;
+  }
+  .type1box div{
+    width: 46%;
+    margin-left: 0px;
+  }
+  #spg{
+    width: 100%;
+  }
+  .ura{
+    width: 50%;
+  }
+
+}
+
+@media screen and (max-width: 980px) {
+
+  body {
+    background-color: lightgreen;
+  }
+  .textano{
+  
+    font-size: calc(15px + 0.1vw);
+    /* other styles */
+
+}
+.libcategorysec{
+  display: none;
+}
+.libbox{
+  justify-content: center;
+}
+.libchargesec{
+  /* min-width: 150px; */
+  display: none;
+};
+
+
+
+
+
+
+
+
+/* .feedleft{
+  display: none;
+} */
+}
+.daysgrid{
+  /* height: 30px; */
+  /* width: 30px; */
+  font-size: 16px;
+}
+
+
+@media screen and (max-width: 788px) {
+  .classsec{
+    display: none;
+    min-width: 100px;
+  }
+  .anobox{
+    justify-content: center;
+  }
+  .anobtn{
+    min-width: 100px;
+  }
+  .createdsec{
+    min-width: 100px;
+  }
+  .anotitlesmall{
+    min-width: 130px;
+  }
+  .sidetextbar{
+    display: none;
+  }
+  .notibigbox{
+    padding-left: 25px;
+  }
+
+  
+
+  
+
+}
+@media screen and (max-width: 588px) {
+  .createdsec{
+    display: none;
+  }
+  .anobox{
+    padding-left: 8px;
+    padding-right: 8px;
+    /* flex-direction: column; */
+  }
+  .anotitlesmall{
+     width: 100%;
+  }
+  .anobtn{
+    display: none;
+  }
+  .cambtn{
+    display: none;
+  }
+  .netxt{
+    display: none;
+  }
+  
+  
+  
+
+}
+@media screen and (max-width: 588px) {
+  .datesgrid div{
+    max-width: 12vw;
+    overflow-x: hidden;
+  }
+
+  
+  
+
+}
+

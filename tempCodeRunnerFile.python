@@ -1,0 +1,28 @@
+import turtle
+obj=turtle.Turtle()
+obj.forward(100)
+# obj.left(90)
+# obj.penup()
+# obj.forward(100)
+# obj.getscreen().bgcolor("green")
+# obj.circle(100,360,6)
+# obj.penup()
+# obj.goto(-50,120)
+# obj.pendown()
+# obj.circle(10)
+
+x,y=obj.pos()
+obj.goto(x,y)
+obj.goto(0,50)
+
+
+
+
+
+
+
+
+
+
+
+turtle.done()
