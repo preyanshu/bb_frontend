@@ -53,7 +53,7 @@ if (type === "2"||type==="3") {
             setLoading(false);
       
             if(!json.error){
-              localStorage.setItem("token", JSON.stringify(json.signupdata.authtoken));
+              localStorage.setItem("token", JSON.stringify(json.signupdata));
               localStorage.setItem("token2", JSON.stringify(json.token));
              console.log(json);
              alert("Registration Successful");
