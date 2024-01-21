@@ -19,16 +19,18 @@ let navigate = useNavigate()
 
    const info =  localStorage.getItem("token") 
 
-   if(!info){
-    navigate("/")
-   }
 
 
   return (
     <div
-      className=" bg-dark d-flex flex-column align-items-center "
+      className=" bg-light d-flex flex-column align-items-center "
       style={{ height: "76vh", width: "77vw" }}
+
     >
+      
+      
+      {/* <h4>Loading</h4> */}
+      {!user && <h1>Loading</h1>}
       {user && <Sidedrawer user={user}/>}
 
       <div className="d-flex justify-content-center" style={{width: "100%", height: "100%",backgroundColor:"none"}}>

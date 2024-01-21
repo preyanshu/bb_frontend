@@ -196,7 +196,7 @@ export const Chatbox = () => {
         
       }
        catch (error) {
-        alert(error);
+        console.log(error);
       }
     }
   };

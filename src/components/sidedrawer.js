@@ -95,7 +95,7 @@ export const Sidedrawer = () => {
 
         } catch (error) {
             setLoading(false);
-            alert(error);
+            // alert(error);
         }
     }
 
@@ -124,7 +124,7 @@ export const Sidedrawer = () => {
       
   
       } catch (error) {
-        alert(error);
+        // alert(error);
       }
     }
     
@@ -152,7 +152,7 @@ export const Sidedrawer = () => {
                 <button  ref={ref}onClick={() => {
                   setIsOpen(!isOpen);
                   
-                  }} className="btn btn-danger m-3 mx-5">
+                  }} className="btn btn-danger m-3 ">
                        close
                       </button>
                 </p>

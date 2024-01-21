@@ -247,6 +247,13 @@ right: 10px;
   color: white;
 
 }
+.drawer.left {
+  padding: 2%;
+  top: 0;
+  left: 0;
+  transform: translateX(-100%);
+  z-index: +100000000;
+}
 
 
 @media screen and (max-width: 1400px) {

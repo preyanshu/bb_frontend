@@ -97,7 +97,7 @@ const Login = (props) => {
                 <div className="flex1 flex2 flex">
                  
                     {!loading && <div>
-                        <lottie-player src="https://lottie.host/e1099103-9082-458f-9820-90f8929e924c/Ujk9LgevjJ.json" background="" speed="1" style={{height:300+"px",width:300+"px"}} loop autoplay direction="1" mode="normal"></lottie-player>
+                        <lottie-player src="https://lottie.host/e1099103-9082-458f-9820-90f8929e924c/Ujk9LgevjJ.json" background="" speed="1" style={{height:250+"px",width:250+"px"}} loop autoplay direction="1" mode="normal"></lottie-player>
                         
                         <div className="text-center"vstyle={{width:100+"vw"}}><h1 className='text-center pb-3'><b>Welcome Back !</b></h1></div></div> }
                  
