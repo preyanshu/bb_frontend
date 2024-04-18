@@ -4,6 +4,8 @@ import { Link, useLocation,useNavigate} from "react-router-dom";
 import Sidebar_2 from "./Sidebar_2";
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
+import Notitoggle from '../Notitoggle';
+import { useTheme } from '../context/ThemeContext';
 
 const Campaigns = (props) => {
   const[flag,setflag]=useState(false);
@@ -41,19 +43,20 @@ console.log("lib",library);
     const elements = document.querySelectorAll(".dashboard");
 
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
   }
   else{
     const elements = document.querySelectorAll("."+library);
 
 elements.forEach(function(element) {
-    element.style.backgroundColor = "#E73673";
+    element.style.backgroundColor = "#8F4FBE";
 });
 
   }
 
   },[])
+  const {isDarkTheme}=useTheme();
   return (<>
     <div className='mainbg'>
        {1 &&  <div className="sidebar" style={{position:"relative",width:desiredWidth,transition:"0.3s"}}>
@@ -107,28 +110,24 @@ elements.forEach(function(element) {
    
    
     </div>}
-    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s"}}>     
+    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s",backgroundColor:isDarkTheme?"#181822":"#E6EDFA",color:isDarkTheme?"white":"black"}}>  
+    <div style={{paddingLeft:"5%",display:"flex",justifyContent:"center",alignItems:"center"}}>
+
+      <div style={{width:"100%"}}>
+      <Notitoggle></Notitoggle>  
+
+      </div>
+   
+    </div>
+    
       
 
     
 
     <div className="notifications" style={{width:desiredWidth3,transition:"0.3s"}}>
-   <div className="text-left pt-3 pl-5  pe-5" style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between",border:"0px solid black",width:78+"vw",position:"absolute",top:10+"px",zIndex:1000000}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div className='sidetextbar'><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-style={{cursor:"pointer",color:"red"}}
-onClick={()=>{
-  
-  navigate("/");
-  localStorage.removeItem("token")
-  localStorage.removeItem("token2")
-  props.showAlert("logged out successfully","danger")
- 
-  
 
-}}
->Logout</span></div></div>
 
-<div className="a shadow " style={{height:76+"vh",width:77+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px"}}>
+<div className="a shadow " style={{height:60+"vh",width:77+"vw",backgroundColor:isDarkTheme?"#302341":"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px"}}>
 
         <h4 style={{marginTop:15+"px",marginBottom:27+"px"}}><b><i class="fa-solid fa-map fa-lg ml-5 me-3 "></i>Campaigns</b></h4>
         {/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
@@ -136,28 +135,28 @@ onClick={()=>{
         <hr />
         <div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
         <span ><i class="fa-solid fa-bell fa-lg me-3"></i>Campaigns Title</span>  <span className='classsec'>  <i class="fa-solid fa-user fa-lg me-3"></i>
-         Sender's Name</span>  <span className='createdsec'> <b>$679</b></span>  
+         Sender's Name</span>  <span className='createdsec'> <b>10:00 AM</b></span>  
 <div className="btn btn-success cambtn" onClick={()=>{
-    ref.current.click();
-}}>Open</div>
+   alert("currently in development")
+}}><i class="fa-solid fa-paper-plane"></i></div>
 
         </div>
         <hr />
         <div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
         <span ><i class="fa-solid fa-bell fa-lg me-3"></i>Campaigns Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
-         Sender's Name</span>  <span className='createdsec' > <b>$3000</b></span>  
+         Sender's Name</span>  <span className='createdsec' > <b>09:00 AM</b></span>  
          <div className="btn btn-success cambtn" onClick={()=>{
-    ref.current.click();
-}}>Open</div>
+   alert("currently in development")
+}}><i class="fa-solid fa-paper-plane"></i></div>
 
         </div>
         <hr />
         <div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
         <span ><i class="fa-solid fa-bell fa-lg me-3"></i>Campaigns Title</span>  <span  className='classsec'>  <i class="fa-solid fa-user fa-lg me-3"></i>
-         Sender's Name</span>  <span className='createdsec' > <b>$400</b></span>  
+         Sender's Name</span>  <span className='createdsec' > <b>12:00 AM</b></span>  
          <div className="btn btn-success cambtn" onClick={()=>{
-    ref.current.click();
-}}>Open</div>
+   alert("currently in development")
+}}><i class="fa-solid fa-paper-plane"></i></div>
 
         </div>
         

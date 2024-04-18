@@ -11,8 +11,8 @@ const Underprocess = () => {
 const pattern2 = /^\/user2\/.*/;
 const pattern3 = /^\/user3\/.*/;
   return (
-    <div className=' d-flex ' style={{justifyContent:"center",alignItems:"center",height:"100vh",border:"0px solid black"}}>
-        <h1>
+    <div className=' d-flex ' style={{justifyContent:"center",alignItems:"center",height:"100vh",border:"0px solid black",color:"black"}}>
+        <h1 style={{color:"black"}}>
         Under Development
 
 {(pattern.test(pathname)||pathname==="/user1") && <Link to='/user1' style={{marginLeft:"20px"}}>Go Back</Link>}

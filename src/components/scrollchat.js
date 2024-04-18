@@ -26,7 +26,7 @@ export const Scrollchat = ({message, pic}) => {
                 )}
   
                    <span  className="mt-3 " style={{
-                      backgroundColor: `${m.sender._id === user._id ?  "#0d6efd" : "white"}`,
+                      backgroundColor: `${m.sender._id === user._id ?  "#8F4FBE" : "white"}`,
                       color: `${m.sender._id === user._id ? "white" :"black"}`,
                       borderRadius: `${m.sender._id === user._id ? "10px 10px 0 10px": "10px 10px 10px 0"}`, padding : "5px 10px", maxWidth: "75%",
                       marginLeft: isSameSenderMargin(message, m, i, user._id),

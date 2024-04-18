@@ -27,9 +27,9 @@ const Login = (props) => {
         let url = '';
 
         if (type === "2"||type==="3") {
-          url = 'https://classroom-backend-uow6.onrender.com/auth/loginTeacher';
+          url = 'http://localhost:5000/auth/loginTeacher';
         } else if (type === "1") {
-          url = 'https://classroom-backend-uow6.onrender.com/auth/loginStudent';
+          url = 'http://localhost:5000/auth/loginStudent';
         }
         const data = {
           email: email,
@@ -72,11 +72,14 @@ const Login = (props) => {
           else{
             alert("Something went wrong");
           }
+
+          setLoading(false);
         
        
           
         } catch (error) {
           alert("Internal Server Error");
+          setLoading(false);
         }
       };
       const handleSubmit = async (e) => {
@@ -94,37 +97,38 @@ const Login = (props) => {
     
     
         
-                <div className="flex1 flex2 flex">
+                <div className="flex1 flex2 flex" style={{backgroundColor:"#181822",top:"0px",position:"absolute"}}>
                  
                     {!loading && <div>
-                        <lottie-player src="https://lottie.host/e1099103-9082-458f-9820-90f8929e924c/Ujk9LgevjJ.json" background="" speed="1" style={{height:250+"px",width:250+"px"}} loop autoplay direction="1" mode="normal"></lottie-player>
+                        <lottie-player src="https://lottie.host/e1099103-9082-458f-9820-90f8929e924c/Ujk9LgevjJ.json" background="" speed="1" style={{height:250+"px",width:250+"px",marginBottom:"-200px"}} loop autoplay direction="1" mode="normal"></lottie-player>
                         
-                        <div className="text-center"vstyle={{width:100+"vw"}}><h1 className='text-center pb-3'><b>Welcome Back !</b></h1></div></div> }
+                        {/* <div className="text-center"vstyle={{width:100+"vw"}}><h1 className='text-center pb-3'><b>Welcome Back !</b></h1></div> */}
+                        </div> }
                  
 
          {loading && <h1>  LOADING...</h1>}
-         {!loading && <div className='login ' style={{width:40+"%",minWidth:270+"px"}} id='spg'>
+         {!loading && <div className='login ' style={{width:40+"%",minWidth:270+"px",zIndex:"2"}} id='spg'>
            
             <form  onSubmit={handleSubmit}>
             <div className="mb-3" style={{}}> 
                     <label htmlFor="name" className="form-label"><b>You are a ?</b></label>
-                <select class="form-select"  aria-label="Default select example" style={{border:"2px solid green",borderRadius:0+"px"}} value={type} onChange={onChange2} id="type" name="type" required >
+                <select class="form-select"  aria-label="Default select example" style={{border:"2px solid green",borderRadius:8+"px"}} value={type} onChange={onChange2} id="type" name="type" required >
   {/* <option selected>Open this select menu</option> */}
   <option value="1">Student</option>
   <option value="2">Teacher</option>
   <option value="3">Parent</option>
 </select></div>
-                <div className="mb-3">
+                <div className="">
                     <label htmlFor="email" className="form-label"><b>E mail</b></label>
-                    <input type="email" className="form-control" value={credentials.email} onChange={onChange} id="email" name="email" aria-describedby="emailHelp" />
+                    <input type="email" className="form-control" value={credentials.email} onChange={onChange} id="email" name="email" aria-describedby="emailHelp" style={{borderRadius:"8px"}} />
                     <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label"><b>Password</b></label>
-                    <input type="password" className="form-control" value={credentials.password} onChange={onChange} name="password" id="password" />
+                    <input type="password" className="form-control" value={credentials.password} onChange={onChange} name="password" id="password" style={{borderRadius:"8px"}} />
                 </div>
 
-                <button type="submit" id='spg_btn' className="btn btn-success mb-3 mt-3" style={{height:50+"px",width:200+"px"}}><b>Submit</b></button>
+                <button type="submit" id='spg_btn' className="btn btn-success mb-3 mt-3" style={{height:50+"px",width:200+"px",border:"0px"}}><b>Submit</b></button>
             </form>
         </div> }
                     

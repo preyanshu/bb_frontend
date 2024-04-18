@@ -4,6 +4,7 @@ import axios from "axios";
 import { Scrollchat } from "./scrollchat";
 import io from "socket.io-client"
 import {getSender }from "./chatlogics"
+import { useTheme } from "./context/ThemeContext";
 
 
 
@@ -17,11 +18,18 @@ export const Chatbox = () => {
   const [socketConnected, setSocketConnected] = useState(false)
   const [typing , setTyping] = useState(false)
   const [istyping, setIsTyping] = useState(false)
+  const [user,setuser]=useState({});
 
   const { selectedChat, setSelectedChat, notification, setNotification,chat ,setChats,setLoading,loading} = useChatContext();
 
-  const user = JSON.parse(localStorage.getItem('token'));
-  console.log("user",user)
+  useEffect(()=>{
+    // const user = ;
+    setuser(JSON.parse(localStorage.getItem('token')));
+
+  },[])
+
+
+  // console.log("user",user)
 
   const fetchAllmessages = async () => {
 
@@ -77,7 +85,8 @@ export const Chatbox = () => {
     socket.on("stop typing", () => setIsTyping(false))
 
   }, []);
-
+ 
+  
 
   useEffect(() => {
 
@@ -229,9 +238,15 @@ export const Chatbox = () => {
 
   let width = window.screen.width;
 
+  const {isDarkTheme}=useTheme();
+
   return (width >= "750" || selectedChat) && (
     <div
       className="d-flex chatbox flex-column align-items-center justify-content-center"
+      style={{
+        backgroundColor:isDarkTheme?"#22222E":"white",
+      color:isDarkTheme?"white":"black",
+      }}
     >
       <div className="d-flex align-items-center justify-content-between" style={{width: "100%"}}>
               {selectedChat && selectedChat.isGroupChat ? (
@@ -272,12 +287,13 @@ export const Chatbox = () => {
       {selectedChat ?  <div
         className="mt-3 p-2 scchat"
         style={{
-          backgroundColor: "#e9e9e9",
+          
           width: "100%",
           height: "80%",
           overflowY: "auto",
           scrollbarWidth: "none",
           wordWrap: "break-word",
+          backgroundColor: isDarkTheme?"":"#E6EDFA",
         }}
       >    
 
@@ -291,8 +307,8 @@ export const Chatbox = () => {
             Select Someone to Chat
           </span>
           <lottie-player
-           src="https://lottie.host/309ea5b0-9f79-49e6-9719-d93219860807/BjL6kG4oJk.json"
-            background="#fff" speed="1" style={{width: "200px", height: "200px", marginTop: "3%"}}
+           src="https://lottie.host/fd63e48b-e2a1-45b0-9c80-66ecb33fbb94/Ctr1gA75CE.json"
+            background={isDarkTheme?"#22222E":"white"}  color="white"speed="1" style={{width: "200px", height: "200px", marginTop: "3%"}}
              direction="1" mode="normal" loop autoplay>
              </lottie-player>
         </div>

@@ -3,6 +3,7 @@ import { useChatContext } from './context/chatcontext';
 import axios from 'axios';
 import { Chatloading } from './chatloading';
 import { Groupmodel } from './groupmodel';
+import { useTheme } from './context/ThemeContext';
 
 export const Mychats = () => {
 
@@ -67,11 +68,15 @@ export const Mychats = () => {
   };
 
   let width = window.screen.width;
+  const {isDarkTheme}=useTheme();
 
 
   return (width >= "750" || !selectedChat) && (
 
-     <div  className="d-flex mychat1 flex-column box bg-light"  style={{boxShadow:"2px 2px 2px black",backgroundColor:"black"}}>
+     <div  className="d-flex mychat1 flex-column box " style={{
+      backgroundColor:isDarkTheme?"#22222E":"white",
+      color:isDarkTheme?"white":"black",
+     }}>
       <div className="chathead my-4">
         <span className="mychat mx-3">My Chats</span>
         <button className="chatbtn mx-3 px-3" onClick={() => setShow(true)}>
@@ -129,7 +134,7 @@ export const Mychats = () => {
 
       <div id="myModal" style={{display: show ? "block" : "none"}} className="modal">
 
-        <div className="modal-content container d-flex ">
+        <div className="modal-content container d-flex " style={{backgroundColor:"#22222E"}}>
 
           <span className="close" onClick={closeModel}>&times;</span>
 

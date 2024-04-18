@@ -4,10 +4,14 @@ import { Link, useLocation,useNavigate} from "react-router-dom";
 import Sidebar_2 from "./Sidebar_2";
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
+import Notitoggle from '../Notitoggle';
+// import { useTheme } from 'styled-components';
+import { useTheme } from '../context/ThemeContext';
 
 const Library = (props) => {
     const[flag,setflag]=useState(false);
     const {flag2,setflag2}=useContext(Flagcontext);
+    const{isDarkTheme}=useTheme();
     const[modal,setmodal]=useState({
       name:"",
       price:"",
@@ -43,86 +47,22 @@ const Library = (props) => {
         const elements = document.querySelectorAll(".dashboard");
     
         elements.forEach(function(element) {
-            element.style.backgroundColor = "#E73673";
+            element.style.backgroundColor = "#8F4FBE";
         });
       }
       else{
         const elements = document.querySelectorAll("."+library);
     
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
     
       }
     
       },[])
     const[details,setdetails]=useState({user_name:"",no:"",auther:"",book_name:""});
-    const data=[{
-        book_name:"book1",
-        no:"12345678",
-        auther:"auther1"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    },{
-        book_name:"book2",
-        no:"06099079",
-        auther:"auther2"
-    }]
-    const [books, setBooks] = useState([]);
+  
+    const [books, setBooks] = useState(null);
 
     useEffect(() => {
       const fetchData = async () => {
@@ -240,86 +180,80 @@ const Library = (props) => {
    
    
     </div>}
-    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s"}}>     
+    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s",backgroundColor:isDarkTheme?"#181822":"#E6EDFA",color:isDarkTheme?"white":"black"}}>     
       
 
     
 
     <div className="notifications"style={{width:desiredWidth3,transition:"0.3s"}}>
-   <div className="text-left pt-3 pl-5  pe-5" style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between",border:"0px solid black",width:78+"vw",position:"absolute",top:10+"px",zIndex:1000000}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div className='sidetextbar'><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-style={{cursor:"pointer",color:"red"}}
-onClick={()=>{
-  
-  navigate("/");
-  localStorage.removeItem("token")
-  localStorage.removeItem("token2")
-  props.showAlert("logged out successfully","danger")
- 
-  
+  <Notitoggle></Notitoggle>
 
-}}
->Logout</span></div></div>
 
-<div className="a shadow " style={{height:76+"vh",width:77+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px"}}>
+
+<div className="a shadow " style={{height:60+"vh",width:77+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",backgroundColor:isDarkTheme?"#302341":"white",position:"relative"}}>
+<div style={{position:"absolute",backgroundColor:"",height:"150px",width:"100%",top:"-80px",left:"0px",display:"flex",justifyContent:"center",alignItems:"center"}}>
+  <img src="../BBCrm(5).png" alt="" style={{height:"auto",width:"60%",zIndex:"+100"}}/>
+</div>
 
         <h4 style={{marginTop:15+"px",marginBottom:27+"px"}}><b><i class="fa-solid fa-book-open fa-lg ml-5 me-3 "></i>Books</b></h4>
         {/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
-        
+        {books && books.length===0 && <><h5  className="text-center" style={{width:"100%"}}>No books</h5></>}
+        {!books && <><h5  className="text-center" style={{width:"100%"}}>Loading...</h5></>}
         
        
+       { books && books.length>0 && <>
         <div style={{height:56+"vh",width:100+"%",overflowY:"scroll",display:"flex",marginLeft:10+"px",marginLeft:"5px"}} className='anobox libbox'>
-            <hr />
+          
             <div className="a anotitlesmall" style={{border:"0px solid black",height:100+"%"}} >
-                <hr />
-            <div className='my-3 p-1 anotext ' style={{}}><b>Title</b></div><hr />
+              
+            <div className='my-3 p-1 anotext ' style={{color:"GrayText"}}><b>Title</b></div> <br />
             {books.map((i)=>{
                     return(<>
-                        <div className='my-3 p-1 anotext'style={{height:41+"px"}} >{i.name}</div><hr />
+                        <div className='my-3 p-1 anotext'style={{height:41+"px"}} >{i.name}</div>
                         </>)
 
                 })}
             </div>
             <div className="a classsec libcategorysec" style={{border:"0px solid black",height:100+"%",width:27+"%"}}>
-                <hr />
-            <div className='my-3 p-1 anotext ' style={{}}><b>Category</b></div><hr />
+           
+            <div className='my-3 p-1 anotext ' style={{color:"GrayText"}}><b>Category</b></div> <br />
             {books.map((i)=>{
                     return(<>
-                        <div className='my-3 p-1 anotext' style={{height:41+"px"}}>{i.category}</div><hr />
+                        <div className='my-3 p-1 anotext' style={{height:41+"px"}}>{i.category}</div>
                         </> )
 
                 })}
             </div>
             <div className="a createdsec libchargesec" style={{border:"0px solid black",height:100+"%",width:27+"%"}}>
-                <hr />
-            <div className='my-3 p-1 anotext ' style={{}}><b>Issue Charge(in Rs)</b></div><hr />
+       
+            <div className='my-3 p-1 anotext ' style={{color:"GrayText"}}><b>Issue Charge(in Rs)</b></div> <br />
             {books.map((i)=>{
               // console.log("i",i);
              
                     return(<>
-                        <div className='my-3 p-1 anotext' style={{height:41+"px"}}>{i.price}</div><hr />
+                        <div className='my-3 p-1 anotext' style={{height:41+"px"}}>{i.price}</div>
                         </>)
 
                 })}
             </div>
             <div className="a anobtn libbtnsec " style={{border:"0px solid black",height:100+"%",width:19+"%"}}>
-                <hr />
+              
             <>
-            <div className='my-3 p-1 anotext' style={{}}><b>...</b></div><hr />
+            <div className='my-3 p-1 anotext' style={{color:"GrayText"}}><b>...</b></div> <br />
                         </>
                 {books.map((e)=>{
                     return(<>
 
-                      <div className='my-3 btnlib'><div style={{height:41+"px",}} onClick={()=>{
+                      <div className='my-3 btnlib'><div style={{height:41+"px",backgroundColor:"#11ADAC"}} onClick={()=>{
                           setmodal(e);
                           ref.current.click();
                           
-                      }} className="btn btn-primary">Borrow</div> <div className="btn btn-success"onClick={()=>{
+                      }} className="btn btn-primary" >Borrow</div> <div className="btn btn-success"onClick={()=>{
                        
                       
                           // ref.current.click();
 
-                      }} style={{height:41+"px"}}>View</div></div><hr />
+                      }} style={{height:41+"px",backgroundColor:"#8F4EC2"}}>View</div></div>
                       </>)
 
                 })}
@@ -330,6 +264,9 @@ onClick={()=>{
             
 
         </div> 
+       
+       
+       </>}
        
          
     </div>

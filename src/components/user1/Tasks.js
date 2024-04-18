@@ -4,8 +4,11 @@ import { Link, useLocation,useNavigate} from "react-router-dom";
 import Sidebar_2 from "./Sidebar_2";
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
+import Notitoggle from '../Notitoggle';
+import { useTheme } from '../context/ThemeContext';
 
 const Tasks = (props) => {
+  const {isDarkTheme}=useTheme();
   const[flag,setflag]=useState(false);
   const {flag2,setflag2}=useContext(Flagcontext);
   useEffect(()=>{
@@ -37,14 +40,14 @@ console.log("lib",library);
     const elements = document.querySelectorAll(".dashboard");
 
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
   }
   else{
     const elements = document.querySelectorAll("."+library);
 
 elements.forEach(function(element) {
-    element.style.backgroundColor = "#E73673";
+    element.style.backgroundColor = "#8F4FBE";
 });
 
   }
@@ -104,65 +107,108 @@ elements.forEach(function(element) {
    
    
     </div>}
-    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s"}}>     
+    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s",backgroundColor:isDarkTheme?"#171821":"#E6EDFA"}}>     
       
 
     
 
-    <div className="notifications" style={{width:desiredWidth3,transition:"0.3s"}}>
-   <div className="text-left pt-3 pl-5  pe-5" style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between",border:"0px solid black",width:78+"vw",position:"absolute",top:10+"px",zIndex:1000000}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div className='sidebartext'><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-style={{cursor:"pointer",color:"red"}}
-onClick={()=>{
-  
-  navigate("/");
-  localStorage.removeItem("token")
-  localStorage.removeItem("token2")
-  props.showAlert("logged out successfully","danger")
- 
-  
+    <div className="notifications" style={{width:desiredWidth3,transition:"0.3s",color:isDarkTheme?"white":"black"}}>
+   <Notitoggle></Notitoggle>
 
-}}
->Logout</span></div></div>
+{window.innerWidth<1300 && <>
+  <div className="a shadow " style={{height:76+"vh",width:77+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",backgroundColor:isDarkTheme?"#22222E":"white"}}>
 
-<div className="a shadow " style={{height:76+"vh",width:77+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px"}}>
-
-        <h4 style={{marginTop:15+"px",marginBottom:27+"px"}}><b><i class="fa-solid fa-list-check fa-lg ml-5 me-3 "></i>Tasks</b></h4>
-        {/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
-        <div>
-        <hr />
-        <div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
-        <span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
-         Sender's Name</span>  <span  className='createdsec' > <b>12 Oct. 2023</b></span>  
+<h4 style={{marginTop:15+"px",marginBottom:27+"px"}}><b><i class="fa-solid fa-list-check fa-lg ml-5 me-3 "></i>Tasks</b></h4>
+{/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
+<div>
+<hr />
+<div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
+<span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
+ Sender's Name</span>  <span  className='createdsec' > <b>12 Oct. 2023</b></span>  
 <div className="btn btn-success cambtn" onClick={()=>{
-    ref.current.click();
+alert("currently in development")
 }}>Open</div>
 
-        </div>
-        <hr />
-        <div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
-        <span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
-         Sender's Name</span>  <span className='createdsec' > <b>12 jan. 2024</b></span>  
-         <div className="btn btn-success cambtn" onClick={()=>{
-    ref.current.click();
+</div>
+<hr />
+<div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
+<span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
+ Sender's Name</span>  <span className='createdsec' > <b>12 jan. 2024</b></span>  
+ <div className="btn btn-success cambtn" onClick={()=>{
+alert("currently in development")
 }}>Open</div>
 
-        </div>
-        <hr />
-        <div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
-        <span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
-         Sender's Name</span>  <span className='createdsec' > <b>11 Oct. 2024</b></span>  
-         <div className="btn btn-success cambtn" onClick={()=>{
-    ref.current.click();
+</div>
+<hr />
+<div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
+<span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
+ Sender's Name</span>  <span className='createdsec' > <b>11 Oct. 2024</b></span>  
+ <div className="btn btn-success cambtn" onClick={()=>{
+alert("currently in development")
 }}>Open</div>
 
-        </div>
-        
-      
-        
-       
-    </div>    
-    </div>
+</div>
+
+
+
+
+</div>    
+</div></>}
+{window.innerWidth>=1300 && <>
+<div style={{display:"flex",justifyContent:"space-evenly",alignItems:"center"}}>
+ 
+  <div className="a shadow " style={{height:60+"vh",width:45+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",backgroundColor:isDarkTheme?"#22222E":"white"}}>
+
+<h4 style={{marginTop:15+"px",marginBottom:27+"px"}}><b><i class="fa-solid fa-list-check fa-lg ml-5 me-3 "></i>Tasks</b></h4>
+{/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
+<div>
+<hr />
+<div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
+<span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
+ Sender's Name</span>  <span  className='createdsec' > <b>12 Oct. 2023</b></span>  
+<div className="btn btn-success cambtn" onClick={()=>{
+alert("currently in development")
+}}>Open</div>
+
+</div>
+<hr />
+<div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
+<span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
+ Sender's Name</span>  <span className='createdsec' > <b>12 jan. 2024</b></span>  
+ <div className="btn btn-success cambtn" onClick={()=>{
+alert("currently in development")
+}}>Open</div>
+
+</div>
+<hr />
+<div style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
+<span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
+ Sender's Name</span>  <span className='createdsec' > <b>11 Oct. 2024</b></span>  
+ <div className="btn btn-success cambtn" onClick={()=>{
+alert("currently in development")
+}}>Open</div>
+
+</div>
+
+
+
+
+</div>    
+</div>
+{
+  isDarkTheme && <>
+  <img src="../Untitled design (1).gif" alt="" style={{width:"35%",height:"auto"}} />
+
+  </>
+}
+{
+  !isDarkTheme && <>
+  <dotlottie-player src="https://lottie.host/07a283ae-484e-4749-a2dd-906ff45ccdba/vmw4W5EFmI.json" background="transparent" speed="1" style={{width:"35%",height:"auto"}}loop autoplay></dotlottie-player>
+
+  </>
+}
+
+</div></>}
 
 
 </div>

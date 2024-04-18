@@ -16,7 +16,7 @@ useEffect(()=>{
 },[pathname])
   return (
     <div>
-      {!(location.pathname==="/user1" || location.pathname==="/user2" || location.pathname==="/user3"||pattern3.test(pathname)||pattern2.test(pathname)||pattern.test(pathname))&&  <button class="btn btn-success" id='nav_button' style={{width:50+"px",height:50+"px",position:"absolute",top:20+"px",left:30+"px",backgroundColor:"black",borderRadius:100+"%",zIndex:+1001}} type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+      {!(location.pathname==="/user1" || location.pathname==="/user2" || location.pathname==="/user3"||pattern3.test(pathname)||pattern2.test(pathname)||pattern.test(pathname))&&  <button class="btn btn-success" id='nav_button' style={{width:50+"px",height:50+"px",position:"absolute",top:20+"px",left:30+"px",backgroundColor:"black",borderRadius:100+"%",zIndex:+1001,display:"none"}} type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
             <div className="bar" style={{width:70+"%",backgroundColor:"white",height:2+"px"}}></div>
             <div className="bar" style={{width:70+"%",backgroundColor:"white",height:2+"px",marginTop:3+"px",marginBottom:3+"px"}}></div>
             <div className="bar" style={{width:70+"%",backgroundColor:"white",height:2+"px"}}></div>

@@ -82,7 +82,7 @@ export const Groupmodel = () => {
     };
 
     return (
-        <div>
+        <div >
             <div className="d-flex justify-content-center grouphead">
                 Create Group Chat
             </div>
@@ -96,7 +96,7 @@ export const Groupmodel = () => {
                     required
                 />
             </div>
-            <div className="mt-3">
+            <div className="my-3">
                 <input
                     type="text"
                     className="form-control"
@@ -111,8 +111,8 @@ export const Groupmodel = () => {
               { <div className="container">
                   <div className="row">
                 {userToAdd.map((u) => {
-                  return <div className='my-2 col-12 d-flex' key={u._id}  onClick={()=>{deleteuser(u)}} >
-                    <span style={{backgroundColor: "green", padding: "5px", color: "white", borderRadius: "4px", cursor: "pointer"}}>{u.name}<i className="fa-regular fa-xmark fa-xs mx-1" style={{color: "white", fontSize: "13px"}}></i> </span>
+                  return <div className='my-3 col-12 d-flex px-3' key={u._id}  onClick={()=>{deleteuser(u)}}>
+                    <span style={{backgroundColor: "#302341", padding: "5px", color: "white", borderRadius: "4px", cursor: "pointer"}}>{u.name}<i className="fa-solid fa-xmark " style={{color: "red", fontSize: "13px",marginLeft:"8px"}}></i> </span>
                   </div>
                 })
               }
@@ -145,7 +145,7 @@ export const Groupmodel = () => {
                 )}
             </div>
 
-            <button className="btn mt-3 btn-info" style={{ width: '100%', position: "sticky" }} onClick={createGroup}>
+            <button className="btn mt-3 btn-info" style={{ width: '100%', position: "sticky",backgroundColor:"#8F4FBE",border:"0px" }} onClick={createGroup}>
                 Create
             </button>
         </div>

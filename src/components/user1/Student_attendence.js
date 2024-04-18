@@ -4,8 +4,11 @@ import { Link, useLocation,useNavigate} from "react-router-dom";
 import Sidebar_2 from "./Sidebar_2";
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
+import Notitoggle from '../Notitoggle';
+import { useTheme } from '../context/ThemeContext';
 
 const Student_attendence = (props) => {
+    const{isDarkTheme}=useTheme();
     
     const location=useLocation();
     const navigate=useNavigate();
@@ -21,12 +24,20 @@ const Student_attendence = (props) => {
     });
     const[modal2,setModal2]=useState({title:"",
     description:""});
+    const[token_new,settoken]=useState("Loading..");
+    const[token,settoken2]=useState("Loading..");
     useEffect(()=>{
       if(window.innerWidth<1200){
         console.log("innerwidth",window.innerWidth);
         setflag2(false);
         
     
+      }
+      if(localStorage.getItem("token2")){
+        settoken(JSON.parse(localStorage.getItem("token2")));
+      }
+      if(JSON.parse(localStorage.getItem("token"))){
+        settoken2(JSON.parse(localStorage.getItem("token")));
       }
   
     },[])
@@ -71,78 +82,24 @@ const Student_attendence = (props) => {
         const elements = document.querySelectorAll(".dashboard");
     
         elements.forEach(function(element) {
-            element.style.backgroundColor = "#E73673";
+            element.style.backgroundColor = "#8F4FBE";
         });
       }
       else{
         const elements = document.querySelectorAll("."+library);
     
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
     
       }
     
       },[])
-      const data=[{
-        id:"1",
-        semester:"2",
-        section:"a",
-        teacher:"jacob",
-        subject:"maths",
-        subjectCode:"MA-211",
-        student:["arjun","rohan"]
 
-    },{ id:"2",
-        semester:"3",
-        section:"b",
-        teacher:"MEENA",
-        subject:"COMPUTER GRAPHIC",
-        subjectCode:"MA-213"
-        ,
-        student:["arjun","rohan"]
-    },{id:"3",
-        semester:"8",
-        section:"c",
-        teacher:"Vaibhav",
-        subject:"OOPS",
-        subjectCode:"CS-213"
-        ,
-        student:["arjun","rohan","ansh","ankur"]
-    },
-    {id:"4",
-        semester:"3",
-        section:"b",
-        teacher:"Vaibhav",
-        subject:"OOPS",
-        subjectCode:"CS-213",
-        student:["arjun","rohan"]
-    }
-]
-const studentsdata=[
-    { name:"preyanshu",
-     semester:"4",
-     section :"c"
 
-    },
-    { name:"rohan",
-     semester:"8",
-     section :"c"
-
-    },
-    { name:"xyz",
-     semester:"2",
-     section :"a"
-
-    },
-    { name:"abc",
-     semester:"4",
-     section :"c"
-
-    }
-]
-    const[details,setdetails]=useState([]);
+  const[details,setdetails]=useState(null);
     
+
 
   
     const ref=useRef();
@@ -172,13 +129,53 @@ const studentsdata=[
 
       };
 
+      async function linkSheet(classId) {
+        const url = 'http://localhost:5000/spreadsheet/link-spreadsheet';
+    
+        const requestData = {
+            classId: classId
+        };
+    
+        const headers = {
+            'Accept': '*/*',
+            'Authorization': `Bearer ${token_new}`,
+            'Content-Type': 'application/json'
+        };
+    
+        const options = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(requestData)
+        };
+    
+        try {
+            const response = await fetch(url, options);
+    
+            if (!response.ok) {
+              alert('Failed to link spreadsheet');
+                throw new Error(`HTTP error! Status: ${response.status}`);
+               
+            }
+    
+            const data = await response.json();
+            console.log('Fetched_data____:', data); 
+            // Log the fetched data
+            
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            alert('Failed to link spreadsheet');
+            // Handle error as needed
+            throw error; // Rethrow the error for the caller to handle
+        }
+    }
+
 
       const addClass = async () => {
         try {
-          const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YWQ4NGJmN2U2OGI4MDUwNTcxNmE1OCIsImlhdCI6MTcwNTg3MDUyN30.Nk0EktNhRHXlBTGJgXjozXuIxnUhu-24KHBl838lMpQ';
+          // const token = `Bearer ${token_new}`;
       
           const requestBody = {
-            name: 'rkvats',
+            name: token.name,
             semester: class1.semester,
             section: class1.section,
             subject: class1.subject,
@@ -192,7 +189,7 @@ const studentsdata=[
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YWQ4NGJmN2U2OGI4MDUwNTcxNmE1OCIsImlhdCI6MTcwNTg3MDUyN30.Nk0EktNhRHXlBTGJgXjozXuIxnUhu-24KHBl838lMpQ`
+              'Authorization': `Bearer ${token_new}`
             },
             body: JSON.stringify(requestBody)
           };
@@ -205,9 +202,16 @@ const studentsdata=[
           }
       
           const data = await response.json();
+          console.log("data",data);
+
+          await linkSheet(data._id);
+
+          alert("sheet linked successfully");
+
           
           console.log(data);
-          fetchData();
+
+          
           
           // Further logic with the data
         } catch (error) {
@@ -218,16 +222,57 @@ const studentsdata=[
       
       // Call the addClass function
    
-      
-    const handleSubmit=(e)=>{
-        e.preventDefault();
-        addClass(class1);
-        ref.current.click();
-        // console.log(class1);
-       
-        setdetails(details.concat(class1))
-        setclass({
+
+      async function removeStudentFromClass(classId, studentId,token) {
+        try {
+             // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
     
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    classId: classId,
+                    studentId: studentId
+                })
+            };
+    
+            const response = await fetch('http://localhost:5000/teacher/removestudent', requestOptions);
+            const data = await response.json();
+    
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to remove student from class');
+            }
+    
+            return data;
+        } catch (error) {
+            console.error('Error:', error.message);
+            throw error;
+        }
+    }
+      
+    const handleSubmit= async (e)=>{
+        e.preventDefault();
+        
+        ref.current.click();
+        addClass();
+        console.log("fetching data");
+
+        setTimeout(() => {
+
+        fetchData(JSON.parse(localStorage.getItem("token2")),JSON.parse(localStorage.getItem("token")));
+        fetchData(JSON.parse(localStorage.getItem("token2")),JSON.parse(localStorage.getItem("token")));
+
+        }, 500);
+        // setdetails(details.concat(class1));
+        
+        
+        // console.log("fetching data");
+        
+        setclass({
+         
           semester: "",
           section: "",
           teacher: {
@@ -240,6 +285,25 @@ const studentsdata=[
           announcements: [],
           
         })
+        
+        // console.log(class1);
+       
+        // setdetails(details.concat(class1))
+        // setclass({
+    
+        //   semester: "",
+        //   section: "",
+        //   teacher: {
+        //     $oid: "658c297bb9382e89b1df6331"
+        //   },
+        //   subject: "",
+        //   subjectCode: "",
+        //   assignments: [],
+        //   students: [],
+        //   announcements: [],
+          
+        // })
+       
         
       
     }
@@ -309,29 +373,29 @@ const studentsdata=[
       
     }
 
-    const fetchData = async () => {
+    const fetchData = async (token_new,token) => {
       try {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YWQ4NGJmN2U2OGI4MDUwNTcxNmE1OCIsImlhdCI6MTcwNTg3MDUyN30.Nk0EktNhRHXlBTGJgXjozXuIxnUhu-24KHBl838lMpQ';
+        // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YWQ4NGJmN2U2OGI4MDUwNTcxNmE1OCIsImlhdCI6MTcwNTg3MDUyN30.Nk0EktNhRHXlBTGJgXjozXuIxnUhu-24KHBl838lMpQ';
     
         const requestOptions = {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token_new}`
           }
         };
     
-        const response = await fetch('https://classroom-backend-uow6.onrender.com/teacher/viewClasses?name=rkvats', requestOptions);
+        const response = await fetch(`https://classroom-backend-uow6.onrender.com/teacher/viewClasses?name=${token.name}`, requestOptions);
     
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
     
         const data = await response.json();
-        
-        console.log(data);
+        console.log("data",data);
+
         setdetails(data)
-        // Further logic with the data
+      
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
         // Handle error as needed
@@ -340,7 +404,13 @@ const studentsdata=[
     
     // Call the fetchData function
     useEffect(()=>{
-      fetchData();
+      if(localStorage.getItem("token2") && localStorage.getItem("token")){
+        // settoken();
+      
+        
+      fetchData(JSON.parse(localStorage.getItem("token2")),JSON.parse(localStorage.getItem("token")));
+        
+      }
 
     },[])
    
@@ -370,7 +440,7 @@ const studentsdata=[
           
       
         
-        console.log("stu",data);
+        console.log("fetching it again",data);
         // Further logic with the data
         setstudentdetails(data);
 
@@ -482,7 +552,7 @@ const addassignment = async () => {
       headers: {
         'Content-Type': 'application/json',
         // 'Content_Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token_new}`,
       
       
       },
@@ -512,6 +582,39 @@ const addassignment = async () => {
     // Handle error as needed
   }
 };
+
+
+async function removeClass(classId, email,token) {
+  try {
+       
+
+      const requestOptions = {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+              classId: classId,
+              email: email
+          })
+      };
+
+      const response = await fetch('http://localhost:5000/teacher/removeclass', requestOptions);
+      const data = await response.json();
+
+      if (!response.ok) {
+          throw new Error(data.error || 'Failed to remove class from teacher');
+      }
+
+      return data;
+  } catch (error) {
+      console.error('Error:', error.message);
+      throw error;
+  }
+}
+
+
 const addannouncement = async () => {
   console.log("current",{classId:current._id,title:modal2.title,description:modal2.description});
   try {
@@ -523,7 +626,7 @@ const addannouncement = async () => {
       headers: {
         'Content-Type': 'application/json',
         // 'Content_Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token_new}`,
       
       
       },
@@ -586,6 +689,25 @@ function getTimeDifference(messageTime) {
   return result;
 }
 
+const filteredStudents = studentdetails.filter((e) => e.semester === current.semester && e.section === current.section);
+
+function removeStudentFromObject(obj, studentIdToRemove) {
+  // Clone the original object to avoid mutating it directly
+  const newObj = { ...obj };
+
+  // Check if the students array exists in the object
+  if (newObj.students && Array.isArray(newObj.students)) {
+      // Find the index of the student ID to remove
+      const index = newObj.students.findIndex(studentId => studentId === studentIdToRemove);
+
+      // If the student ID is found, remove it from the students array
+      if (index !== -1) {
+          newObj.students.splice(index, 1);
+      }
+  }
+
+  return newObj;
+}
 
 
   return (<>
@@ -641,28 +763,16 @@ function getTimeDifference(messageTime) {
    
    
     </div>}
-    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s"}}>     
+    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s",backgroundColor:isDarkTheme?"#181822":"#E6EDFA",color:isDarkTheme?"white":"black"}}>     
       
 
     
 
     <div className="notifications"style={{width:desiredWidth3,transition:"0.3s"}}>
-   <div className="text-left pt-3 pl-5  pe-5" style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between",border:"0px solid black",width:78+"vw",position:"absolute",top:10+"px",zIndex:1000000}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div className='sidetextbar'><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-style={{cursor:"pointer",color:"red"}}
-onClick={()=>{
-  
-  navigate("/");
-  localStorage.removeItem("token")
-  localStorage.removeItem("token2")
-  props.showAlert("logged out successfully","danger")
- 
-  
+<Notitoggle></Notitoggle>
 
-}}
->Logout</span></div></div>
-
-<div className="a shadow  astuatten " style={{height:73+"vh",width:78+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",position:"relative"}}>
+<div className="a astuatten " style={{height:73+"vh",width:78+"vw",backgroundColor: isDarkTheme ? (!stu ? "#22222E" : "#181822") : (!stu ? "white" : "#E6EDFA")
+,borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",position:"relative"}}>
 
         <h4 style={{marginTop:15+"px",marginBottom:27+"px"}}><b>
         <i class="fa-solid fa-arrow-left fa-lg ml-5 me-3 " onClick={()=>{
@@ -676,46 +786,98 @@ onClick={()=>{
                 ref.current.click();
             
           
-        }}></i>  
-                 </b></h4>
+        }}></i>
+                 </b> {stu &&<span style={{fontSize:"20px"}}>
+                  
+                  
+                  {!current.spreadsheetLink && <>
+                    <i class="fa-solid fa-clipboard-user fa-lg " style={{color:"#1BAAAB"}} onClick={()=>{
+                      alert("No Sheet Linked");
+                    }}></i>
+                  </>}
+
+                  {current.spreadsheetLink && <>
+
+                    <a href={current.spreadsheetLink} target='blank'><i class="fa-solid fa-clipboard-user fa-lg " style={{color:"#1BAAAB"}}></i></a>
+                  
+                  </>}
+                 
+                 
+                 
+                 
+                 </span>  } </h4> 
                  {/* {!stu && <div className="d-flex w-100" style={{border:"0px solid black",position:"absolute",height:"70px",top:"20px",left:"0px",alignItems:"center",justifyContent:"center"}}>
 
 <h2 style={{fontWeight:"300"}}></h2>
 </div>} */}
         {/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
         <div class="" style={{display:"",alignItems:"center",justifyContent:"center",height:"100%",width:"100%",position:"relative"}}>
-          {details.length===0 && <div className="text-center d-flex " style={{width:"100%",height:"100%",position:"absolute",border:"0px solid black",alignItems:"center",justifyContent:"center",top:"-40px",flexDirection:"column"}}> 
-          <lottie-player src="https://lottie.host/c2257700-6895-4ddc-ad93-1176a948baa5/QhrZ0OUaa6.json" background="#FFFFFF" speed="1" style={{width:"300px",height:"300px"}} loop autoplay direction="1" mode="normal"></lottie-player>
+          {
+            !details && <><div className='text-center d-flex'  style={{width:"100%",height:"100%",position:"absolute",border:"0px solid black",alignItems:"center",justifyContent:"center",top:"-40px",flexDirection:"column"}}>
+              
+              <h4 >Loading...</h4>
+              </div></>
+          }
+          {details && details.length===0 && details && <div className="text-center d-flex " style={{width:"100%",height:"100%",position:"absolute",border:"0px solid black",alignItems:"center",justifyContent:"center",top:"-40px",flexDirection:"column"}}> 
+          <lottie-player src="https://lottie.host/c2257700-6895-4ddc-ad93-1176a948baa5/QhrZ0OUaa6.json" background={isDarkTheme?"#22222E":"white"} speed="1" style={{width:"300px",height:"300px"}} loop autoplay direction="1" mode="normal"></lottie-player>
             <h5 className='mt-5'>You Dont Have Any Created Classes ..</h5> </div>}
        
        
         <div class="card-group" >
   
-  {!stu && details.map((e)=>{
+  {!stu &&details&& details.map((e)=>{
     return(
         <div className="col-md-3 m-1" style={{Width:"250px"}}>
-    <div className="card my-3" >
-        <div className="card-body card-bodyclass " onClick={()=>{
-          
-               setstu(1);
-               setcurrent(e);
-               
-               fetchassignment(e);
-               fetchannouncement(e);
-               
-
-    
-        }} style={{backgroundColor:"#F2F2F2",position:"relative"}} >
+    <div className="card my-3" style={{backgroundColor:isDarkTheme?"#22222E":"white"}} >
+        <div className="card-body card-bodyclass " style={{backgroundColor:isDarkTheme?"#302341":"#E6EDFA",position:"relative",borderRadius:"20px"}}  >
             <div className="d-flex align-items-center">
                 <h5 className="card-title me-4" style={{fontWeight:"800",color:"darkgreen"}}>{e.subjectCode}</h5> <br />
-                <h6><b className='mt-1' style={{color:"#666464"}}>{e.subject}</b></h6>
-                <i className="far fa-trash-alt mx-2" style={{position:"absolute",right:"20px",top:"20px",color:"red"}} ></i>
+                <h6><b className='mt-1' style={{color:isDarkTheme?"white":"black"}}>{e.subject}</b></h6>
+                <i className="far fa-trash-alt mx-2" style={{position:"absolute",right:"20px",top:"20px",color:"red",cursor:"pointer"}} onClick={()=>{
+                  prompt("Are you sure you want to delete this class?","yes");
+
+                  console.log("clicked");
+
+const classId = e._id;
+const email = JSON.parse(localStorage.getItem("token")).email;
+
+removeClass(classId, email,JSON.parse(localStorage.getItem("token2")))
+    .then(data => {
+        console.log('Class removed from teacher:',data);
+        fetchData(JSON.parse(localStorage.getItem("token2")));
+        function removeObjectById(array, idToRemove) {
+          return array.filter(obj => obj._id !== idToRemove);
+      }
+      setdetails(removeObjectById(details,e._id));
+        
+    })
+    .catch(error => {
+        console.error('Failed to remove class from teacher:', error);
+    });
+
+    
+
+
+
+
+
+                }} ></i>
                 <hr />
                 
             </div>
-            < p className="card-text"><b><i class="fa-solid fa-user me-2"></i>Teacher : </b> <span style={{color:"#666464"}}>RKvats</span> <br />
-             <b><div class="fa-solid fa-user me-2" style={{color:"#F2F2F2"}}></div>Semester :</b> <span style={{color:"#666464"}}>{e.semester}</span> <br />
-             <b><div class="fa-solid fa-user me-2" style={{color:"#F2F2F2"}}></div>section :</b> <span style={{color:"#666464"}}>{e.section}</span> </p>
+            < p className="card-text" style={{color:isDarkTheme?"white":"black"}} onClick={()=>{
+          
+          setstu(1);
+          setcurrent(e);
+          
+          fetchassignment(e);
+          fetchannouncement(e);
+          
+
+
+   }}><b><i class="fa-solid fa-user me-2"></i>Teacher : </b> <span style={{color:isDarkTheme?"white":"black"}}>{token.name}</span> <br />
+             <b><div class="fa-solid fa-user me-2" style={{color:"#302341"}}></div>Semester :</b> <span style={{color:isDarkTheme?"white":"black"}}>{e.semester}</span> <br />
+             <b><div class="fa-solid fa-user me-2" style={{color:"#302341"}}></div>section :</b> <span style={{color:isDarkTheme?"white":"black"}}>{e.section}</span> </p>
 
         </div>
       </div>
@@ -726,7 +888,7 @@ onClick={()=>{
 })  }
 
 
-{stu && <div  class="d-flex  p-3 students"style={{border:"2px solid grey",height:"50vh",position:"relative",borderRadius:"8px",flexDirection:"column",flexWrap:"wrap",alignItems:"flex-start",overflowX:"auto"}}>
+{stu && <div  class="d-flex  p-3 students"style={{border:"0px solid grey",height:"50vh",position:"relative",borderRadius:"8px",flexDirection:"column",flexWrap:"wrap",alignItems:"flex-start",overflowX:"auto",backgroundColor:isDarkTheme?"#22222E":"white"}}>
   {/* <div className="text-center my-3" style={{width:"100%",height:"30px",position:"absolute"}}>   <h4>Students</h4> </div> */}
 
   {current.students.length===0 && <div className="text-center d-flex " style={{width:"100%",height:"100%",position:"",border:"0px solid black",alignItems:"center",justifyContent:"center"}}>   <h4>No Students In The Class</h4> </div>}
@@ -746,15 +908,33 @@ onClick={()=>{
       return (<>
        
        <div className="col-md-3 m-1 my-3" style={{width:"fit-content",height:"60px",minWidth:"200px"}} key={student._id}>
-          <div className="card my-3" style={{height:"65px"}}>
-            <div className="card-body p-3 " style={{backgroundColor:"#F2F2F2",borderRadius:"8px",position:"relative"}} onClick={() => {
+          <div className="card my-3" style={{height:"65px",backgroundColor:"#181822"}}>
+            <div className="card-body p-3 " style={{backgroundColor:"#181822",borderRadius:"15px",position:"relative",color:"white"}} onClick={() => {
               setstu(1);
             }}>
               <div className="d-flex align-items-center">
                 <h5 className="card-title me-4 mt-1"><i class="fa-solid fa-user me-3"></i>{student.name}</h5>
                 {/* Additional content */}
                 {/* <i className="far fa-cross mx-2" ></i> */}
-                <i class="far fa-trash-can mx-2" style={{position:"absolute",right:"0px",top:"10px",color:"red",cursor:"pointer"}}></i>
+                <i class="far fa-trash-can mx-2" style={{position:"absolute",right:"0px",top:"10px",color:"red",cursor:"pointer"}} onClick={()=>{
+
+const classId = current._id;
+const studentId = student._id;
+
+removeStudentFromObject(current, studentId);
+
+removeStudentFromClass(classId, studentId,JSON.parse(localStorage.getItem("token2")))
+    .then(data => {
+        console.log('Student removed from class:', data);
+        fetchstu();
+    })
+    .catch(error => {
+        console.error('Failed to remove student from class:', error);
+    });
+
+
+
+                }}></i>
               </div>
               {/* Other card content */}
             </div>
@@ -775,7 +955,7 @@ onClick={()=>{
 
 }
   </div>}
-{stu && <div  id='scrolldiv' class="d-flex pb-3 assignment"style={{border:"2px solid grey",height:"50vh",flexDirection:"column",alignItems:"center",overflowY:"auto",backgroundColor:"",overflowX:"hidden",borderRadius:"8px",position:"relative"}}>
+{stu && <div  id='scrolldiv' class="d-flex pb-3 assignment"style={{border:"0px solid grey",height:"50vh",flexDirection:"column",alignItems:"center",overflowY:"auto",backgroundColor:isDarkTheme?"#22222E":"white",overflowX:"hidden",borderRadius:"8px",position:"relative"}}>
   {/* <div className="text-center my-3" style={{width:"100%",height:"30px",position:"absolute"}}>   <h4>Students</h4> </div> */}
 
 
@@ -783,7 +963,7 @@ onClick={()=>{
      
 
  <div className="mt-3 d-flex  px-3" style={{ width: "100%", border:"0px solid black",height:50+"px",alignItems:"center"}} >
-  <h4 style={{fontWeight:"800"}}> <span style={{color:"darkgreen"}}><i class="fa-solid fa-file me-3"></i>Assignments</span> <i class="fa-solid fa-plus fa-lg " style={{marginLeft:50+"px",position:"absolute",top:"30px",right:"26px"}} onClick={()=>{
+  <h4 style={{fontWeight:"800"}}> <span style={{color:""}}><i class="fa-solid fa-file me-3" style={{color:"#1BAAAB"}}></i>Assignments</span> <i class="fa-solid fa-plus fa-lg  " style={{marginLeft:50+"px",position:"absolute",top:"30px",right:"26px"}} onClick={()=>{
     ref2.current.click();
   }}></i></h4> 
  </div>
@@ -792,8 +972,8 @@ onClick={()=>{
       {assignments.map((e)=>{
 
         return(<>
-        <div className="mt-3 pb-3" style={{ width: "90%", border: "0px solid black", overflowY: "hidden" ,minHeight:"100px",backgroundColor:"#F2F2F2",position:"relative"}}>
-  <h6 className='mx-3 mt-3'><b className='me-5' style={{color:"darkgreen"}}>{e.title}</b><span className='me-3'><b><span style={{position:"absolute",right:"13px",color:"#6a6969"}}><i className='fa-solid fa-clock mx-3' ></i>{e.dueDate}</span></b></span></h6>
+        <div className="mt-3 pb-3" style={{ width: "90%", border: "0px solid black", overflowY: "hidden" ,minHeight:"100px",backgroundColor:isDarkTheme?"#181822":"#E6EDFA",position:"relative",borderRadius:"15px"}}>
+  <h6 className='mx-3 mt-3'><b className='me-5' style={{color:"darkgreen"}}>{e.title}</b></h6>
   <div className='p-3 pt-1' style={{ wordWrap: "break-word", whiteSpace: "pre-wrap", overflowWrap: "break-word" }}>
     {e.description}
   </div>
@@ -812,7 +992,7 @@ onClick={()=>{
 
       
   </div>}
-{stu && <div  id='scrolldiv' class="d-flex pb-3  announcements"style={{border:"2px solid grey",height:"50vh",flexDirection:"column",alignItems:"center",overflowY:"auto",backgroundColor:"",overflowX:"hidden",borderRadius:"8px",position:"relative"}}>
+{stu && <div  id='scrolldiv' class="d-flex pb-3  announcements"style={{border:"0px solid grey",height:"50vh",flexDirection:"column",alignItems:"center",overflowY:"auto",backgroundColor:isDarkTheme?"#22222E":"white",overflowX:"hidden",borderRadius:"8px",position:"relative"}}>
   {/* <div className="text-center my-3" style={{width:"100%",height:"30px",position:"absolute"}}>   <h4>Students</h4> </div> */}
 
 
@@ -820,7 +1000,7 @@ onClick={()=>{
      
 
  <div className="mt-3 d-flex  px-3" style={{ width: "100%", border:"0px solid black",height:50+"px",alignItems:"center"}} >
-  <h4> <span style={{color:"#0156FD",fontWeight:"800"}}><i class="fa-solid fa-bullhorn me-3"></i>Announcements</span> <i class="fa-solid fa-plus fa-lg " style={{marginLeft:50+"px",position:"absolute",top:"30px",right:"26px"}} onClick={()=>{
+  <h4> <span style={{color:"",fontWeight:"800"}}><i class="fa-solid fa-bullhorn me-3" style={{color:"#1BAAAB"}}></i>Announcements</span> <i class="fa-solid fa-plus fa-lg " style={{marginLeft:50+"px",position:"absolute",top:"30px",right:"26px"}} onClick={()=>{
     ref3.current.click();
   }}></i></h4> 
  </div>
@@ -834,8 +1014,8 @@ onClick={()=>{
           const timeAgo = getTimeDifference(date);
 
         return(<>
-        <div className="mt-3 pb-3" style={{ width: "90%", border: "0px solid black", overflowY: "hidden" ,minHeight:"100px",backgroundColor:"#F2F2F2"}}>
-  <h6 className='mx-3 mt-3'><b className='me-5' style={{color:"#0156FD"}}>{e.title}</b><span className='me-3' style={{position:"absolute",right:"13px",color:"#6a6969"}}><b><i className='fa-solid fa-clock mx-3'></i>{timeAgo}</b></span></h6>
+        <div className="mt-3 pb-3" style={{ width: "90%", border: "0px solid black", overflowY: "hidden" ,minHeight:"100px",backgroundColor:isDarkTheme?"#181822":"#E6EDFA",borderRadius:"15px"}}>
+  <h6 className='mx-3 mt-3'><b className='me-5' style={{color:"#0156FD"}}>{e.title}</b></h6>
   <div className='p-3 pt-1' style={{ wordWrap: "break-word", whiteSpace: "pre-wrap", overflowWrap: "break-word" }}>
     {e.content}
   </div>
@@ -929,61 +1109,109 @@ onClick={()=>{
 
   
   
-      {studentdetails
-        .filter((e) => e.semester === current.semester && e.section === current.section)
-        .map((e, index) => (
-          <div
-            key={index}
-            className='studentcard'
+{filteredStudents.map((e, index) => (
+      <div
+        key={index}
+        className='studentcard'
+        style={{
+          width: '96%',
+          height: 'fit-content',
+          margin: '2%',
+          padding: '12px',
+          backgroundColor: selectedItems.includes(e._id) ? 'lightgreen' : '#F2F2F2',
+          display: 'flex',
+          justifyContent: 'space-between',
+          borderRadius: '8px',
+        }}
+        onClick={() => addstu(e)}
+      >
+        <div>
+          {!selectedItems.includes(e._id)&&<img
+            src='https://tse2.mm.bing.net/th?id=OIP.eCrcK2BiqwBGE1naWwK3UwHaHa&pid=Api&P=0&h=180' 
+            alt=''
+            className='mx-3'
             style={{
-              width: '96%',
-              height: 'fit-content',
-              margin: '2%',
-              padding: '12px',
-              backgroundColor: selectedItems.includes(e._id) ? 'lightgreen' : '#F2F2F2',
-              display: 'flex',
-              justifyContent: 'space-between',
-              borderRadius: '8px',
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              border: '0px solid black',
             }}
-            onClick={() => addstu(e)}
-          >
-            <div>
-              {!selectedItems.includes(e._id)&&<img
-                src='https://tse2.mm.bing.net/th?id=OIP.eCrcK2BiqwBGE1naWwK3UwHaHa&pid=Api&P=0&h=180' 
-                alt=''
-                className='mx-3'
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '50%',
-                  border: '2px solid black',
-                }}
-              /> }
-              {selectedItems.includes(e._id) && <img
-                src='http://clipart-library.com/images_k/green-checkmark-transparent/green-checkmark-transparent-17.png' 
-                alt=''
-                className='mx-3'
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '50%',
-                  border: '0px solid black',
-                }}
-              /> }
-              
-            </div>
-            <div className='me-5'>
-              <h6 style={{ fontWeight: '700', fontSize: '1.1rem' }}>{e.rollno}</h6>
-              <h6>{e.name}</h6>
-            </div>
-          </div>
-        ))}
+          /> }
+          {selectedItems.includes(e._id) && <img
+            src='http://clipart-library.com/images_k/green-checkmark-transparent/green-checkmark-transparent-17.png' 
+            alt=''
+            className='mx-3'
+            style={{
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              border: '0px solid black',
+            }}
+          /> }
+          
+        </div>
+        <div className='me-5'>
+          <h6 style={{ fontWeight: '700', fontSize: '1.1rem' }}>{e.rollno}</h6>
+          <h6>{e.name}</h6>
+        </div>
+      </div>
+    ))}
+    <button onClick={() => {
+      
+      // Here you can send the selectedStudentNames array to the backend
+    }}>Add</button>
     
 
   </div>
   
   
-  <button type="submit" class="btn btn-primary mt-3 w-100">ADD</button>
+  <button type="submit" class="btn btn-primary mt-3 w-100" onClick={()=>{
+    const selectedStudentNames = filteredStudents.filter(student => selectedItems.includes(student._id)).map(student => student.name);
+    // Now you have an array of selected student names
+    console.log("s",selectedStudentNames);
+    async function sendPostRequest(url, headers, body) {
+      try {
+          const response = await fetch(url, {
+              method: 'POST',
+              headers: headers,
+              body: JSON.stringify(body)
+          });
+  
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+  
+          const responseData = await response.json();
+          return responseData;
+      } catch (error) {
+          console.error('Error:', error);
+          throw error;
+      }
+  }
+  
+  // Usage example:
+  const url = 'http://localhost:5000/teacher/addStudentToClass';
+  const headers = {
+      'Accept': '*/*',
+      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+      'Authorization': `Bearer ${token_new}` ,
+      'Content-Type': 'application/json'
+  };
+  const body = {
+      "classId": current._id,
+      "studentNames": selectedStudentNames
+  };
+  
+  sendPostRequest(url, headers, body)
+      .then(responseData => {
+          console.log('Response:', responseData);
+          
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          
+      });
+  }}>ADD</button>
 </form>}
      
         

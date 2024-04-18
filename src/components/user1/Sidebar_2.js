@@ -1,13 +1,24 @@
-import React,{useEffect, useRef} from 'react'
+import React,{useEffect, useRef,useState} from 'react'
 import { span, useLocation } from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
 import "./h5.css";
 
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
+import ToggleBtn from './ToggleBtn';
 
 const Sidebar_2 = (props) => {
    const {flag}=props;
+   const[token2,settoken]=useState("Loading...");
+   useEffect(()=>{
+   if(localStorage.getItem("token")){
+   var token=JSON.parse(localStorage.getItem("token"));
+   settoken(token.name);
+   }
+   
+    
+    },[])
+
     let location = useLocation();
     const navigate=useNavigate()
     const ref=useRef()
@@ -16,6 +27,7 @@ const Sidebar_2 = (props) => {
 const pattern = /^\/user1\/.*/;
 const pattern2 = /^\/user2\/.*/;
 const pattern3 = /^\/user3\/.*/;
+const {dark,setdark}=useContext(Flagcontext);
 
   return (
     <div>
@@ -28,7 +40,7 @@ const pattern3 = /^\/user3\/.*/;
  } 
  {flag &&<>
   <lottie-player src="https://lottie.host/e1099103-9082-458f-9820-90f8929e924c/Ujk9LgevjJ.json" background="" speed="1" style={{height:50+"px",width:50+"px",marginLeft:22+"px",display:"inline-block"}} loop autoplay direction="1" mode="normal"></lottie-player>
- <h5 class="offcanvas-title ml-3 " id="nothover" style={{width:"fit-content"}}>User Name</h5> </>
+ <h5 class="offcanvas-title ml-3 " id="nothover" style={{width:"fit-content"}}>{token2}</h5> </>
  
 
  } 
@@ -118,13 +130,26 @@ const pattern3 = /^\/user3\/.*/;
       </h5>
       <h5 className='logout' onClick={() => {
         localStorage.removeItem("token")
-        localStorage.removeItem("token2")
-        navigate("/login")
+   localStorage.removeItem("token2")
+
+   setTimeout(() => {
+    alert("logged out successfully");
+    navigate("/login")
+   }, 600);
 
     }}>
         <i className="fa-solid fa-right-from-bracket fa-lg me-3" style={{ marginLeft: 10 + "%", marginTop: 25 + "px", marginBottom: 25 + "px" }}></i>
         <span className="my-3" style={{ color: "white", textDecoration: "none" }}>Logout</span>
       </h5>
+
+      <div style={{display:"flex",alignItems:"center",justifyContent:"flex-start",marginBottom:"30px",paddingLeft:"17px",marginTop:"20px"}}>
+        <div className="" style={{marginLeft:"24px",color: "white", textDecoration: "none",fontFamily:"sans-serif",marginRight:"40px"}}> <i class="fa-solid fa-circle-half-stroke me-3 fa-lg"></i>Theme</div>
+  <ToggleBtn className="me-3"
+  
+  
+  ></ToggleBtn>
+  
+</div>
     </>}
     {!flag && <>
       <br />
@@ -212,11 +237,23 @@ const pattern3 = /^\/user3\/.*/;
       </h5>
       <h5 className='logout' style={{ marginTop: 0 + "vh", width: "fit-content", paddingLeft: "8px", marginLeft: "8px" }} onClick={() => 
      { localStorage.removeItem("token")
-      localStorage.removeItem("token2")
-        navigate("/")}}>
+   localStorage.removeItem("token2")
+
+   setTimeout(() => {
+    alert("logged out successfully");
+    navigate("/login")
+   }, 600);}}>
         <i className="fa-solid fa-right-from-bracket me-3" style={{ marginLeft: 10 + "%", marginTop: 25 + "px", marginBottom: 25 + "px" }}></i>
         <span className="my-3" style={{ color: "white", textDecoration: "none" }}></span>
       </h5>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"flex-start",marginBottom:"30px",paddingLeft:"5px",marginTop:"20px"}}>
+      
+  <ToggleBtn className="mx-3"
+  
+  
+  ></ToggleBtn>
+  
+</div>
     </div></>}
      
  
@@ -235,7 +272,7 @@ const pattern3 = /^\/user3\/.*/;
     } 
     {flag &&<>
      <lottie-player src="https://lottie.host/e1099103-9082-458f-9820-90f8929e924c/Ujk9LgevjJ.json" background="" speed="1" style={{height:50+"px",width:50+"px",marginLeft:22+"px",display:"inline-block"}} loop autoplay direction="1" mode="normal"></lottie-player>
-    <h5 class="offcanvas-title ml-3 " id="nothover" style={{width:"fit-content"}}>User Name</h5> </>
+    <h5 class="offcanvas-title ml-3 " id="nothover" style={{width:"fit-content"}}>{token2}</h5> </>
 
     } 
     
@@ -245,7 +282,7 @@ const pattern3 = /^\/user3\/.*/;
     
     {flag && <><hr />
     
-    <h5 class="dashboard" style={{marginTop:0+"vh"}} onClick={() => console.log("clicked")}>
+    <h5 class="dashboard" style={{marginTop:0+"vh"}} onClick={() => navigate("/user2")}>
   <i class="fa-solid fa-table-columns fa-lg me-3" style={{marginLeft:10+"%",marginTop:25+"px",marginBottom:25+"px"}}></i>
   <span to="/user2" className="my-3" style={{color:"white",textDecoration:"none"}}>
     Dashboard
@@ -344,15 +381,29 @@ const pattern3 = /^\/user3\/.*/;
 </h5>
 
 
+
      <h5 className='logout' onClick={() => {
         localStorage.removeItem("token")
-        localStorage.removeItem("token2")
-        navigate("/login")
+   localStorage.removeItem("token2")
+
+   setTimeout(() => {
+    alert("logged out successfully");
+    navigate("/login")
+   }, 600);
 
     }}>
         <i className="fa-solid fa-right-from-bracket fa-lg me-3" style={{ marginLeft: 10 + "%", marginTop: 25 + "px", marginBottom: 25 + "px" }}></i>
         <span className="my-3" style={{ color: "white", textDecoration: "none" }}>Logout</span>
       </h5>
+
+      <div style={{display:"flex",alignItems:"center",justifyContent:"flex-start",marginBottom:"30px",paddingLeft:"17px",marginTop:"20px"}}>
+        <div className="" style={{marginLeft:"24px",color: "white", textDecoration: "none",fontFamily:"sans-serif",marginRight:"40px"}}> <i class="fa-solid fa-circle-half-stroke me-3 fa-lg"></i>Theme</div>
+  <ToggleBtn className="me-3"
+  
+  
+  ></ToggleBtn>
+  
+</div>
      </> }
 
      
@@ -386,7 +437,7 @@ const pattern3 = /^\/user3\/.*/;
   <span to="/user2" className="my-3" style={{color:"white",textDecoration:"none"}} ></span>
 </h5>
 
-<h5 class='networks' style={{width:"fit-content", paddingLeft:"8px", marginLeft:"8px"}} onClick={() => navigate("/user2/netwokrs")}>
+<h5 class='networks' style={{width:"fit-content", paddingLeft:"8px", marginLeft:"8px"}} onClick={() => navigate("/user2/networks")}>
   <i class="fa-solid fa-network-wired fa-lg me-3" style={{marginLeft:10+"%",marginTop:25+"px",marginBottom:25+"px"}}></i>
   <span to="/user2" className="my-3" style={{color:"white",textDecoration:"none"}} ></span>
 </h5>
@@ -429,11 +480,23 @@ const pattern3 = /^\/user3\/.*/;
 
      <h5 className='logout' style={{ marginTop: 0 + "vh", width: "fit-content", paddingLeft: "8px", marginLeft: "8px" }} onClick={() => 
      { localStorage.removeItem("token")
-      localStorage.removeItem("token2")
-        navigate("/")}}>
+   localStorage.removeItem("token2")
+
+   setTimeout(() => {
+    alert("logged out successfully");
+    navigate("/login")
+   }, 600);}}>
         <i className="fa-solid fa-right-from-bracket me-3" style={{ marginLeft: 10 + "%", marginTop: 25 + "px", marginBottom: 25 + "px" }}></i>
         <span className="my-3" style={{ color: "white", textDecoration: "none" }}></span>
       </h5>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"flex-start",marginBottom:"30px",paddingLeft:"5px",marginTop:"20px"}}>
+      
+  <ToggleBtn className="mx-3"
+  
+  
+  ></ToggleBtn>
+  
+</div>
      </div></> }
 
  
@@ -449,7 +512,7 @@ const pattern3 = /^\/user3\/.*/;
  } 
  {flag &&<>
   <lottie-player src="https://lottie.host/e1099103-9082-458f-9820-90f8929e924c/Ujk9LgevjJ.json" background="" speed="1" style={{height:50+"px",width:50+"px",marginLeft:22+"px",display:"inline-block"}} loop autoplay direction="1" mode="normal"></lottie-player>
- <h5 class="offcanvas-title ml-3 " id="nothover" style={{width:"fit-content"}}>User Name</h5> </>
+ <h5 class="offcanvas-title ml-3 " id="nothover" style={{width:"fit-content"}}>{token2}</h5> </>
 
  } 
  
@@ -566,13 +629,26 @@ const pattern3 = /^\/user3\/.*/;
 
    <h5 className='logout' onClick={() => {
         localStorage.removeItem("token")
-        localStorage.removeItem("token2")
-        navigate("/login")
+   localStorage.removeItem("token2")
+
+   setTimeout(() => {
+    alert("logged out successfully");
+    navigate("/login")
+   }, 600);
 
     }}>
         <i className="fa-solid fa-right-from-bracket fa-lg me-3" style={{ marginLeft: 10 + "%", marginTop: 25 + "px", marginBottom: 25 + "px" }}></i>
         <span className="my-3" style={{ color: "white", textDecoration: "none" }}>Logout</span>
       </h5>
+
+      <div style={{display:"flex",alignItems:"center",justifyContent:"flex-start",marginBottom:"30px",paddingLeft:"17px",marginTop:"20px"}}>
+        <div className="" style={{marginLeft:"24px",color: "white", textDecoration: "none",fontFamily:"sans-serif",marginRight:"40px"}}> <i class="fa-solid fa-circle-half-stroke me-3 fa-lg"></i>Theme</div>
+  <ToggleBtn className="me-3"
+  
+  
+  ></ToggleBtn>
+  
+</div>
    
 
 </>}
@@ -660,11 +736,25 @@ const pattern3 = /^\/user3\/.*/;
 
    <h5 className='logout' style={{ marginTop: 0 + "vh", width: "fit-content", paddingLeft: "8px", marginLeft: "8px" }} onClick={() => 
      { localStorage.removeItem("token")
-      localStorage.removeItem("token2")
-        navigate("/")}}>
+   localStorage.removeItem("token2")
+
+   setTimeout(() => {
+    alert("logged out successfully");
+    navigate("/login")
+   }, 600);}}>
         <i className="fa-solid fa-right-from-bracket me-3" style={{ marginLeft: 10 + "%", marginTop: 25 + "px", marginBottom: 25 + "px" }}></i>
         <span className="my-3" style={{ color: "white", textDecoration: "none" }}></span>
       </h5>
+
+      <div style={{display:"flex",alignItems:"center",justifyContent:"flex-start",marginBottom:"30px",paddingLeft:"5px",marginTop:"20px"}}>
+      
+  <ToggleBtn className="mx-3"
+  
+  
+  ></ToggleBtn>
+  
+</div>
+   
 </div></>}
     
     

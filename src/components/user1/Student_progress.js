@@ -6,6 +6,8 @@ import Graph from './Graph';
 import "./Student_progress.css"
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
+import Notitoggle from '../Notitoggle';
+import { useTheme } from '../context/ThemeContext';
 
 
 const Student_progress= (props) => {
@@ -40,14 +42,14 @@ const Student_progress= (props) => {
         const elements = document.querySelectorAll(".dashboard");
     
         elements.forEach(function(element) {
-            element.style.backgroundColor = "#E73673";
+            element.style.backgroundColor = "#8F4FBE";
         });
       }
       else{
         const elements = document.querySelectorAll("."+library);
     
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
     
       }
@@ -55,12 +57,13 @@ const Student_progress= (props) => {
       },[])
      
 
-    const[details,setdetails]=useState([]);
+    const[details,setdetails]=useState(null);
     const[type,setType]=useState("all");
     const[type2,setType2]=useState("all");
     const[type3,setType3]=useState("all");
     const[flag,setflag]=useState(false);
     const[filter,setfilter]=useState(false);
+    const{isDarkTheme}=useTheme();
     const fetchData = async () => {
       try {
         const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YWQ4NGJmN2U2OGI4MDUwNTcxNmE1OCIsImlhdCI6MTcwNTg3MDUyN30.Nk0EktNhRHXlBTGJgXjozXuIxnUhu-24KHBl838lMpQ';
@@ -189,23 +192,10 @@ const Student_progress= (props) => {
 
     
 
-    <div className="notifications"style={{width:desiredWidth3,transition:"0.3s"}}>
-   <div className="text-left pt-3 pl-5  pe-5" style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between",border:"0px solid black",width:78+"vw",position:"absolute",top:10+"px",zIndex:1000000}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div className='sidetextbar'><span className="mx-3"></span><span className="mx-3"></span><span className="mx-3 me-5"></span><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-style={{cursor:"pointer",color:"red"}}
-onClick={()=>{
-  
-  navigate("/");
-  localStorage.removeItem("token")
-  localStorage.removeItem("token2")
-  props.showAlert("logged out successfully","danger")
- 
-  
+    <div className="notifications"style={{width:desiredWidth3,transition:"0.3s",backgroundColor:isDarkTheme?"#1F1F29":"#E6EDFA",color:isDarkTheme?"white":"black"}}>
+   <Notitoggle></Notitoggle>
 
-}}
->Logout</span></div></div>
-
-<div className="a shadow " style={{height:79+"vh",width:78+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px"}}>
+<div className="a shadow " style={{height:79+"vh",width:78+"vw",backgroundColor:isDarkTheme?"#1F1F29":"#E6EDFA",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",color:isDarkTheme?"white":"black"}}>
   {
     flag && <div style={{width:"100%",display:"flex",justifyContent:"center",marginTop:"30px"}}>
     <h4><b>Student,s Progress</b></h4>
@@ -214,8 +204,9 @@ onClick={()=>{
   }
   
     {!flag && <><div style={{display:"flex",justifyContent:"end",alignItems:"end"}}>
+      
       {
-        !filter &&  <div className="btn btn-success me-3 w-lg-160" style={{height:"40px"}}  onClick={()=>{
+        !filter &&  <div className="btn btn-success me-3 w-lg-160" style={{height:"40px",backgroundColor:"#914EC0",border:"0px"}}  onClick={()=>{
           if(filter){
             setfilter(false);
           }
@@ -235,7 +226,7 @@ onClick={()=>{
         }}  ><b><i class="fa-solid fa-sort fa-xl me-lg-2 "></i><span className='d-none d-sm-none d-lg-inlineblock'>Remove Filter</span>  </b></div>
       }
    
-    <div  className="me-2 " style={{width:90+"px"}}> 
+    <div  className="me-2 " style={{width:90+"px",color:isDarkTheme?"white":"black"}}> 
     <label htmlFor="type mb-2"><b>Section:</b></label> 
                 <select class="form-select"  aria-label="Default select example" style={{border:"2px solid green",borderRadius:0+"px"}} value={type} onChange={(e)=>{
                     onChange2(e);
@@ -248,7 +239,7 @@ onClick={()=>{
   <option value="C">C</option> 
   <option value="D">D</option>
 </select></div>
-    <div  className="me-2 " style={{width:100+"px"}}> 
+    <div  className="me-2 " style={{width:100+"px",color:isDarkTheme?"white":"black"}}> 
     <label htmlFor="type mb-2"><b>Branch:</b></label> 
                 <select class="form-select"  aria-label="Default select example" style={{border:"2px solid green",borderRadius:0+"px"}} value={type2} onChange={(e)=>{
                     onChange3(e);
@@ -261,7 +252,7 @@ onClick={()=>{
   <option value="EEE">EEE</option>
   <option value="ECE">ECE</option>
 </select></div>
-    <div  className="me-2 " style={{width:100+"px"}}> 
+    <div  className="me-2 " style={{width:100+"px",color:isDarkTheme?"white":"black"}}> 
     <label htmlFor="type mb-2"><b>Semester:</b></label> 
                 <select class="form-select"  aria-label="Default select example" style={{border:"2px solid green",borderRadius:0+"px"}} value={type3} onChange={(e)=>{
                     onChange4(e);
@@ -282,25 +273,36 @@ onClick={()=>{
 
     </div>
 
+    {details && details.length===0 && <div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100%"}}>
+      <h4><b>No Data Found</b></h4>
+    </div>}
+    {!details  && <div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100%"}}>
+      <h4><b>Loading...</b></h4>
+    </div>}
+
+   {details && details.length>0 &&<>
+
     <div  className="m-3 p-lg-5"style={{border:"0px solid black",height:"90%",display:"flex",flexDirection:"column",alignItems:"center",overflowY:"auto"}}>
       {!filter &&
       details
        .map((e, index) => (
-         <div  className="shadow p-3 px-5 mb-5 progdata h-lg-130" style={{backgroundColor:"#F0F2F5",width:"93%"}} onClick={()=>{
+         <div  className="shadow p-3 px-5 mb-5 progdata h-lg-130" style={window.innerWidth>1200?{ backgroundColor: isDarkTheme?"#181822":"white", height: "130px", width: "93%",borderRadius:"10px" }:{
+          height:"fit-content",backgroundColor: isDarkTheme?"#181822":"white",width:"93%"
+         }} onClick={()=>{
           setflag(true);
          }}>
-               <h6 class="" style={{color:"darkgreen",fontWeight:"bolder",fontSize:"22px"}}><b>{e.name}</b></h6>
-               <div  className="mt-3"style={{display:"flex",justifyContent:"space-between"}}>
-                 <div style={{height:"60px",width:"180px"}}>
+               <h6 class="" style={{color:"#11ADAC",fontWeight:"bolder",fontSize:"22px"}}><b>{e.name}</b></h6>
+               <div  className="mt-3"style={window.innerWidth>1200?{ display: "flex", justifyContent: "space-between",color:isDarkTheme?"white":"black"}:{display: "flex", justifyContent: "space-between",color:isDarkTheme?"white":"black",flexDirection:"column"}}>
+                 <div style={window.innerWidth>1200?{ height: "60px", width: "180px" }:{width:"180px",height:"fit-content"}}>
                    <b>Section: </b> {e.section}
                  </div>
-                 <div className='h-lg-60' style={{width:"180px"}}>
+                 <div style={window.innerWidth>1200?{ height: "60px", width: "180px" }:{width:"180px",height:"fit-content"}}>
                  <b>Semester: </b>  {e.semester}
                  </div>
-                 <div className='h-lg-60' style={{width:"180px"}}>
+                 <div  style={window.innerWidth>1200?{ height: "60px", width: "180px" }:{width:"180px",height:"fit-content"}}>
                  <b>Roll No: </b> {e.rollno}
                  </div>
-                 <div className='h-lg-60' style={{width:"180px"}}>
+                 <div style={window.innerWidth>1200?{ height: "60px", width: "180px" }:{width:"180px",height:"fit-content"}}>
                  <b>Branch: </b> {e.branch}
                  </div>
    
@@ -325,26 +327,28 @@ onClick={()=>{
      .map((e, index) => (
        <div
          className="shadow p-3 px-5 mb-5 progdata"
-         style={{ backgroundColor: "#F0F2F5", height: "130px", width: "93%" }}
+         style={window.innerWidth>1200?{ backgroundColor: isDarkTheme?"#181822":"white", height: "130px", width: "93%",borderRadius:"10px" }:{
+          height:"fit-content",backgroundColor: isDarkTheme?"#181822":"white",width:"93%"
+         }}
          onClick={() => {
            setflag(true);
          }}
          key={index} // Don't forget to add a unique key for each element in the map function
        >
-         <h6 className="" style={{ color: "darkgreen", fontWeight: "bolder",fontSize:"22px" }}>
+         <h6 className="" style={{ color: "#11ADAC", fontWeight: "bolder",fontSize:"22px" }}>
            <b>{e.name}</b>
          </h6>
-         <div className="mt-3" style={{ display: "flex", justifyContent: "space-between" }}>
-           <div style={{ height: "60px", width: "180px" }}>
+         <div className="mt-3" style={window.innerWidth>1200?{ display: "flex", justifyContent: "space-between",color:isDarkTheme?"white":"black"}:{display: "flex", justifyContent: "space-between",color:isDarkTheme?"white":"black",flexDirection:"column"}}>
+           <div style={window.innerWidth>1200?{ height: "60px", width: "180px" }:{width:"180px",height:"fit-content"}}>
              <b>Section: </b> {e.section}
            </div>
-           <div style={{ height: "60px", width: "180px" }}>
+           <div style={window.innerWidth>1200?{ height: "60px", width: "180px" }:{width:"180px",height:"fit-content"}}>
              <b>Semester: </b> {e.semester}
            </div>
-           <div style={{ height: "60px", width: "180px" }}>
+           <div style={window.innerWidth>1200?{ height: "60px", width: "180px" }:{width:"180px",height:"fit-content"}}>
              <b>Roll No: </b> {e.rollno}
            </div>
-           <div style={{ height: "60px", width: "180px" }}>
+           <div style={window.innerWidth>1200?{ height: "60px", width: "180px" }:{width:"180px",height:"fit-content"}}>
              <b>Branch: </b> {e.branch}
            </div>
          </div>
@@ -359,7 +363,7 @@ onClick={()=>{
          <div  className="shadow p-3 px-5 mb-5 progdata" style={{backgroundColor:"#F0F2F5",height:"130px",width:"93%"}} onClick={()=>{
           setflag(true);
          }}>
-               <h6 class="" style={{color:"darkgreen",fontWeight:"bolder"}}><b>{e.name}</b></h6>
+               <h6 class="" style={{color:"#11ADAC",fontWeight:"bolder"}}><b>{e.name}</b></h6>
                <div  className="mt-3"style={{display:"flex",justifyContent:"space-between"}}>
                  <div style={{height:"60px",width:"180px"}}>
                    <b>Section: </b>  {e.section}
@@ -385,23 +389,31 @@ onClick={()=>{
 
         
 
-    </div></>}
-    {flag && <div style={{display:"flex",justifyContent:"space-evenly",marginTop:"-40px",alignItems:"center",height:"100%"}}>
-      <div className="a " style={{height:420+"px",width:24+"vw",backgroundColor:"white",borderRadius:13+"px"}}> 
-   <Graph backgroundColor="" type="pie"></Graph>
+    </div>
+   
+   
+   </>
+
+
+
+   }</>}
+    {flag && <div style={window.innerWidth>1200?{display:"flex",justifyContent:"space-evenly",marginTop:"40px",alignItems:"center",height:"100%"}:{display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",marginTop:"40px"}}>
+
+      <div className="a " style={window.innerWidth>1200?{height:420+"px",width:24+"vw",borderRadius:13+"px",backgroundColor:""}:{width:"300px",height:"fit-content"}}> 
+   <Graph backgroundColor="" textcolor={isDarkTheme?"white":"black"} type="pie"></Graph>
 
 
    
 
 
         </div>
-        <div className="b " style={{height:420+"px",width:24+"vw",backgroundColor:"white",borderRadius:13+"px"}}>
-        <Graph backgroundColor="" type="line"></Graph>
+        <div className="b " style={window.innerWidth>1200?{height:420+"px",width:24+"vw",borderRadius:13+"px",backgroundColor:""}:{width:"300px",height:"fit-content"}}>
+        <Graph backgroundColor="#22222E" textcolor={isDarkTheme?"white":"black"} type="line"></Graph>
       
    
         </div>
-        <div className="c " style={{height:420+"px",width:24+"vw",backgroundColor:"white",borderRadius:13+"px"}}>
-        <Graph backgroundColor="" type="bar"></Graph>
+        <div className="c " style={window.innerWidth>1200?{height:420+"px",width:24+"vw",borderRadius:13+"px",backgroundColor:""}:{width:"300px",height:"fit-content"}}>
+        <Graph backgroundColor="#22222E" textcolor={isDarkTheme?"white":"black"} type="bar"></Graph>
        
   
    

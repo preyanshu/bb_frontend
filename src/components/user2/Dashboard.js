@@ -1,61 +1,195 @@
 // import React from 'react'
 import "../user1/dashboard.css"
-import "./dashboard2.css"
-import Graph from '../user1/Graph.js'
+import Graph from '../user1//Graph'
 import React,{useEffect, useRef,useState} from 'react'
 import { Link, useLocation } from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
 import Sidebar_2 from "../user1/Sidebar_2";
-import styles from "./dashb.module.css"
+import { useContext } from 'react';
+import Flagcontext from '../context/notes/Flagcontext';
+import { useTheme } from "../context/ThemeContext";
+import Notitoggle from "../Notitoggle";
+
 
 const Dashboard = (props) => {
-    const data=[
-        { name:"preyanshu",
-         semester:"4",
-         section :"c",
-         type:"teacher"
-    
-        },
-        { name:"rohan",
-         semester:"8",
-         section :"c",
-         type:"teacher"
-    
-        },
-        { name:"xyz",
-         semester:"2",
-         section :"a",
-         type:"teacher"
-    
-        }
-    ]
-        const[details,setdetails]=useState(data);
-        const[flag,setflag]=useState(false);
-        const[flag2,setflag2]=useState(true);
+  const[flag,setflag]=useState(false);
+  const {flag2,setflag2}=useContext(Flagcontext);
+  const [teacherEmail, setEmail] = useState("");
+  const {isDarkTheme,assignmentsLength}=useTheme();
+ 
+
     
   useEffect(()=>{
+
     if(window.innerWidth<1200){
       console.log("innerwidth",window.innerWidth);
       setflag2(false);
       
   
     }
+    console.log("S",localStorage.getItem("token"));
+    if(localStorage.getItem("token")){
+      console.log("setting")
+      console.log("token",JSON.parse(localStorage.getItem("token")).email);
+      setEmail(JSON.parse(localStorage.getItem("token")).email);
+    }
 
   },[])
 
-  var desiredWidth = !flag2 ? 80+"px" : '260px';
-  // const desiredWidth2 = !flag2 ? '87vw' : '80vw';
-  var desiredWidth2 = !flag2 ? "87vw" : '80vw';
-  var desiredml = !flag2 ? "160px" : '60px';
+  const [barData, setBarChartData] = useState([]);
+  const [lineData, setLineChartData] = useState([]);
+  const [classData, setDoughnutChartData] = useState([]);
+
+   let students = parseInt(classData.totalStudents)
+   let classes = parseInt(classData.totalClassesByTeacher)
+   let summation = students + classes+ assignmentsLength;
+    let studentPercentage = Math.round((students / summation) * 100);
+    let classPercentage = Math.round((classes / summation) * 100);
+    let assignmentPercentage = Math.round((assignmentsLength / summation) * 100);
+
+   let doughnutData = {
+    labels:[["Students"],["Classes"],["Assignments"]],
+    datasets:[[studentPercentage,100-studentPercentage],[classPercentage,100-classPercentage],[assignmentPercentage,100-assignmentPercentage]]
+
+   }
+
+
+//data fetching functions
+async function fetchDataForBarChart() {
+  const url = 'http://localhost:5000/chart/user2/bar';
+  const requestBody = {
+      teacherEmail: JSON.parse(localStorage.getItem("token")).email
+  };
+
+  try {
+      const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        console.log('Failed to fetch data for doughnut chart');
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Data for bar chart:', data);
+      // Process the received data for the bar chart
+      // return data;
+      setBarChartData(data);
+  } catch (error) {
+      console.log('Error fetching data for bar chart:', error);
+      // Handle error appropriately
+  }
+}
+
+async function fetchDataForLineChart() {
+  const url = 'http://localhost:5000/chart/user2/line';
+  const requestBody = {
+      teacherEmail: JSON.parse(localStorage.getItem("token")).email
+  };
+
+  try {
+      const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        console.log('Failed to fetch data for doughnut chart');
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Data for line chart:', data);
+      // Process the received data for the line chart
+      // return data;
+      setLineChartData(data);
+  } catch (error) {
+      console.log('Error fetching data for line chart:', error);
+      // Handle error appropriately
+  }
+}
+
+async function fetchDataForDoughnutChart() {
+  const url = 'http://localhost:5000/chart/user2/doughnut';
+  const requestBody = {
+      teacherEmail: JSON.parse(localStorage.getItem("token")).email
+  };
+
+  try {
+      const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+          console.log('Failed to fetch data for doughnut chart');
+          return;
+      }
+
+      const data = await response.json();
+      console.log('Data for doughnut chart:', data);
+      // Process the received data for the doughnut chart
+      // return data;
+      setDoughnutChartData(data);
+  } catch (error) {
+      console.log('Error fetching data for doughnut chart:', error);
+      // Handle error appropriately
+  }
+}
+
+
+//data fetching functions
+
+useEffect(() => {
+  const fetchData = async () => {
+    console.log("teacherEmail",teacherEmail);
+      try {
+          await Promise.all([
+              fetchDataForBarChart(),
+              fetchDataForLineChart(),
+              fetchDataForDoughnutChart()
+          ]);
+      } catch (error) {
+          console.error('Error fetching chart data:', error);
+      }
+  };
+
+  // Fetch data initially when component mounts
+  if(teacherEmail !== null){
+    console.log("teacherEmail",teacherEmail);
+    fetchData();
+  }
+
+  // Update data every 5 seconds
+  const intervalId = setInterval(fetchData, 5000);
+
+  // Clean up interval on component unmount
+  return () => clearInterval(intervalId);
+}, []);
+
+
+    var desiredWidth = !flag2 ? 80+"px" : '260px';
+    // const desiredWidth2 = !flag2 ? '87vw' : '80vw';
+    var desiredWidth2 = !flag2 ? "87vw" : '80vw';
     // if(window.innerWidth<600){
     //   desiredWidth2="100vw";
     //   desiredWidth="5vw";
     // }
     var desiredWidth3 = !flag2 ? "calc(100vw - 75px)" : "calc(100vw - 250px)";
+
   const location=useLocation();
   const navigate=useNavigate();
-  const ref=useRef();
-  const ref2=useRef();
   useEffect(()=>{
     const parts = location.pathname.split('/');
 const library = parts[parts.length - 1];
@@ -64,22 +198,23 @@ console.log("lib",library);
     const elements = document.querySelectorAll(".dashboard");
 
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
   }
   else{
     const elements = document.querySelectorAll("."+library);
 
 elements.forEach(function(element) {
-    element.style.backgroundColor = "#E73673";
+    element.style.backgroundColor = "#8F4FBE";
 });
 
   }
 
   },[])
-return(<>
-   <div className='mainbg'>
-    {1 &&  <div className="sidebar" style={{position:"relative",width:desiredWidth,transition:"0.3s"}}>
+  
+return(
+   <div className='mainbg' style={{backgroundColor:isDarkTheme?"#181822":"#E6EDFA" ,transition:"0.3s"}}>
+      {1 &&  <div className="sidebar" style={{position:"relative",width:desiredWidth,transition:"0.3s"}}>
       {
         !flag2 &&<i class=" arrow fa-solid fa-arrow-right fa-xl ml-5 mx-3 " style={{position:"absolute",right:"10px",marginLeft:"200px",top:"37px"}} onClick={()=>{
           if(flag2==false){
@@ -130,133 +265,141 @@ return(<>
    
    
     </div>}
-   
-   
-   {
-    window.innerWidth>1200 && <div className="bg bg2" style={{width:desiredWidth2,transition:"0.3s",position:"relative",marginLeft:desiredml}}>
 
-    
-    <div className="text-left pt-3 pl-5  pe-5" style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between"}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div><span className="mx-3"></span><span className="mx-3"></span><span className="mx-3 me-5"></span><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-    style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-    style={{cursor:"pointer",color:"red"}}
-    onClick={()=>{
-      
-      navigate("/");
-      localStorage.removeItem("token")
-      localStorage.removeItem("token2")
-      props.showAlert("logged out successfully","danger")
+    {1 && <div className="bg" style={{width:desiredWidth2,transition:"0.3s",backgroundColor:isDarkTheme?"#181822":"#E6EDFA" ,color:isDarkTheme?"white":"black"}}>
+    <Notitoggle></Notitoggle>
      
-      
-    
-    }}
-    >Logout</span></div>
-   </div>
-     
-        <div className="top" style={{backgroundColor:"#F0F2F5",height:250+"px",marginTop:-10+"px",position:"relative"}} >
-       
+    <div className="top" style={window.innerWidth>1200?{height:250+"px",marginTop:50+"px"}:{height:"fit-content",marginTop:100+"px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",paddingTop:"30px",paddingBottom:"30px",width:"100%"}} >
         
-        <div className="a shadow" style={{height:90+"px",width:24+"vw",backgroundColor:"white",borderRadius:13+"px"}}>
-            <div className="top_icon" style={{height:64+"px",width:64+"px",backgroundColor:"#3B3B42",marginTop:-20+"px",borderRadius:8+"%",marginLeft:30+"px",boxShadow:"2px 2px 3px #3B3B42"}}><i class="fa-solid fa-money-bill fa-xl"></i></div>
-           <div style={{marginLeft:65+"%",marginTop:-8+"%"}}><h6>No. of Students</h6>
-            <h4 style={{marginLeft:33.8+"%"}}><b>5300</b></h4></div> 
+        <div className="a shadow  " style={window.innerWidth>1200?{height:"fit-content",width:"22vw",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",display:"flex",justifyContent:"space-evenly",marginBottom:"130px",marginTop:"185px"}:{width:"300px",display:"flex",justifyContent:"center",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",flexDirection:"column-reverse",alignItems:"center",marginBottom:"20px"}}>
+
+          <div style={{border:"0px solid white",display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"column",marginRight:"",marginLeft:window.innerWidth>1200?"30px":"0px",fontSize:"20px",marginBottom:window.innerWidth>1200?"0px":"20px"}}>
+            <div>{doughnutData.labels[0][0]}</div>
+            <b style={{fontWeight:"900"}}>{classData.totalStudents}</b>
+          </div>
+            
+           <div style={{marginRight:"",background:"",width:window.innerWidth>1200?"50%":"100%",display:"flex",justifyContent:"center"}}>
+            <Graph graphColor="purple" textcolor="white" type="doughnut" doughnutLabel={doughnutData.labels[0]} doughnutData={doughnutData.datasets[0]}></Graph>
+            {/* {console.log("doughnutData",doughnutData.datasets[0])} */}
+            {/* {console.log("doughnutData",doughnutData.labels[0])} */}
+            
+            </div> 
         </div>
-        <div className="b shadow" style={{height:90+"px",width:24+"vw",backgroundColor:"white",borderRadius:13+"px"}}>   <div className="top_icon"style={{height:64+"px",width:64+"px",backgroundColor:"#E73774",marginTop:-20+"px",borderRadius:8+"%",marginLeft:30+"px",boxShadow:"2px 2px 3px #E73774"}}><i class="fa-solid fa-user fa-xl"></i></div>
-        <div style={{marginLeft:70+"%",marginTop:-8+"%",border:"0px solid black"}}><h6>No of Lectures</h6>
-        <div style={{display:"flex",justifyContent:"end",alignItems:"center",width:75+"%"}}>
-            <h4  className="text-left" style={{marginRight:13+"%",width:"fit-content"}}><b>270</b></h4></div></div>
-        </div>
-        <div className="c shadow" style={{height:90+"px",width:24+"vw",backgroundColor:"white",borderRadius:13+"px"}}>   <div class="top_icon"style={{height:64+"px",width:64+"px",backgroundColor:"#2982EB",marginTop:-20+"px",borderRadius:8+"%",marginLeft:30+"px",boxShadow:"2px 2px 3px #2982EB"}}><i class="fa-solid fa-money-bill fa-xl"></i></div>
-        <div style={{marginLeft:65+"%",marginTop:-8+"%"}}><h6>No of active Users</h6>
-            <h4 style={{marginLeft:39.8+"%"}}><b>3000</b></h4></div> 
-        </div>
+        <div className="a shadow " style={window.innerWidth>1200?{height:"fit-content",width:"22vw",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",display:"flex",justifyContent:"space-evenly",marginBottom:"130px",marginTop:"185px"}:{width:"300px",display:"flex",justifyContent:"center",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",flexDirection:"column-reverse",alignItems:"center",marginBottom:"20px"}}>
+
+<div style={{border:"0px solid white",display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"column",marginRight:"",marginLeft:window.innerWidth>1200?"30px":"0px",fontSize:"20px",marginBottom:window.innerWidth>1200?"0px":"20px"}}>
+<div>{doughnutData.labels[1][0]}</div>
+            <b style={{fontWeight:"900"}}>{classData.totalClassesByTeacher}</b>
+</div>
+  
+ <div style={{marginRight:"",background:"",width:window.innerWidth>1200?"50%":"100%",display:"flex",justifyContent:"center"}}>
+  <Graph graphColor="black" textcolor="white" type="doughnut" doughnutLabel={doughnutData.labels[1]} doughnutData={doughnutData.datasets[1]}></Graph>
+  
+  </div> 
+</div>
+<div className="a shadow " style={window.innerWidth>1200?{height:"fit-content",width:"22vw",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",display:"flex",justifyContent:"space-evenly",marginBottom:"130px",marginTop:"185px"}:{width:"300px",display:"flex",justifyContent:"center",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",flexDirection:"column-reverse",alignItems:"center",marginBottom:"20px"}}>
+
+<div style={{border:"0px solid white",display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"column",marginRight:"",marginLeft:window.innerWidth>1200?"30px":"0px",fontSize:"20px",marginBottom:window.innerWidth>1200?"0px":"20px"}}>
+<div>{doughnutData.labels[2][0]}</div>
+            <b style={{fontWeight:"900"}}>{assignmentsLength}</b>
+</div>
+  
+ <div style={{marginRight:"",background:"",width:window.innerWidth>1200?"50%":"100%",display:"flex",justifyContent:"center"}}>
+  <Graph graphColor="#93A0F3" textcolor="white" type="doughnut" doughnutLabel={doughnutData.labels[2]} doughnutData={doughnutData.datasets[2]}></Graph>
+  
+  </div> 
+</div>
+       
+       
 
         </div>
-        <div className="mid" style={{backgroundColor:"#F0F2F5",height:400+"px",marginTop:-15+"px",justifyContent:"space-between",marginBottom:"25px"}} >
-        <div className="a shadow" style={{height:400+"px",width:37.25+"vw",backgroundColor:"white",borderRadius:13+"px",marginLeft:"1.5%"}}> 
-   <Graph backgroundColor="#59B15D" type="bar"></Graph>
+        <div className="mid" style={window.innerWidth>1200?{height:"fit-content",marginTop:80+"px",marginBottom:"60px"}:{height:"fit-content",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",width:"100%"}} >
+      
+        <div className="b shadow" style={window.innerWidth>1200?{height:"fit-content",width:37+"vw",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",paddingTop:"30px",paddingBottom:"30px"}:{
 
-   <div style={{marginLeft:2+"vw",marginTop:1+"vw"}}><h6><b>No. of Students</b></h6>
-   <b>(+15%)</b> increase from last Year</div>
+height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",paddingTop:"30px",paddingBottom:"30px",marginBottom:"20px"}}>
+        <div className="mt-4">
+        <Graph backgroundColor="" type="bar" textcolor={isDarkTheme?"white":"black"} style={{}} barData={barData}></Graph></div>
+        <div style={{marginLeft:2+"vw"}}><h6><b>Assignments in Class</b></h6>
+   </div>
    <hr />
    <div style={{marginLeft:2+"vw"}}>
    <i class="fa-regular fa-clock me-3"></i>
  
-    updated 4 min ago
-
-
-   </div>
-
-
-        </div>
-        <div className="b shadow" style={{height:400+"px",width:37.25+"vw",backgroundColor:"white",borderRadius:13+"px",marginRight:"1.5%"}}>
-        <Graph backgroundColor="#E73673" type="line"></Graph>
-        <div style={{marginLeft:2+"vw",marginTop:1+"vw"}}><h6><b>Subject wise attendence</b></h6>
-   <b>lowest </b>attendence in X subject</div>
-   <hr />
-   <div style={{marginLeft:2+"vw"}}>
-   <i class="fa-regular fa-clock me-3"></i>
- 
-    updated 4 min ago
+    updates every 5 sec
 
 
    </div>
         </div>
+        <div className="a shadow" style={window.innerWidth>1200?{height:"fit-content",width:37+"vw",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",paddingTop:"30px",paddingBottom:"30px"}:{
+
+height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",paddingTop:"30px",paddingBottom:"30px",marginBottom:"20px"}}> 
+        <div className="mt-4">
+        <Graph backgroundColor="" textcolor={isDarkTheme?"white":"black"} type="line" lineData={lineData}></Graph></div>
   
 
+   <div style={{marginLeft:2+"vw",marginTop:1+"vw"}}><h6><b>Students in Class</b></h6>
+   </div>
+   <hr />
+   <div style={{marginLeft:2+"vw"}}>
+   <i class="fa-regular fa-clock me-3"></i>
+ 
+   updates every 5 sec
+
+
+   </div>
+
+
+        </div>
+
         </div>
       
-        <div className="end" style={{backgroundColor:"#F0F2F5",height:500+"px",marginTop:-10+"px"}} >
-        <div className="a shadow " style={{height:450+"px",width:47+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px"}}>
-            <div style={{border:"0px solid black",display:"flex",justifyContent:"space-between"}}>
-                <div><h4>Campaigns</h4></div>
-                <div className="btn btn-success" onClick={()=>{
-                    ref.current.click();
-                }}><i class="fa-solid fa-plus fa-xl me-2"></i><b>Create </b> </div>
-            
+        <div className="end" style={window.innerWidth>1200?{height:500+"px",marginTop:-10+"px"}:{height:"fit-content",display:"flex",flexDirection:"column",width:"100%",alignItems:"center",justifyContent:"center"}} >
+        <div className="a shadow " style={window.innerWidth>1200?{height:450+"px",width:47+"vw",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginBottom:"20px"}:{
+          height:450+"px",width:"300px",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginBottom:"20px"
 
-            </div>
+
+
+        }}>
+            <h4>Campaigns</h4>
+
             
+            {
+        Array.from({length: 3}).map((_, index) => (
+          <div key={index}>
+            <hr />
+            <div style={{display: "flex", width: "100%", justifyContent: "space-between"}}>
+              <span><i className="fa-brands fa-microsoft fa-lg me-3"></i>Project name</span>
+              {
+                window.innerWidth>1200 && <>
+                <span>
+                <i className="fa-solid fa-user fa-lg"></i>
+                <i className="fa-solid fa-user fa-lg" style={{marginLeft: "-5px"}}></i>
+                <i className="fa-solid fa-user fa-lg" style={{marginLeft: "-10px"}}></i>
+              </span>
+              <span><b>$4500</b></span>
+              <div style={{width: "15%", height: "10px", marginTop: "5px"}} className="progress">
+                <div className="progress-bar" role="progressbar" style={{width: "25%"}} aria-valuenow="23" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+                </>
+              }
+            </div>
+            <hr />
+          </div>
+        ))
+      }
+
+
         
-            <div>
-            <hr />
-            <div style={{display:"flex",width:100+"%",justifyContent:"space-between"}}>
-            <span ><i class="fa-brands fa-microsoft fa-lg me-3"></i>Project name</span>  <span >  <i class="fa-solid fa-user fa-lg"></i>
-            <i class="fa-solid fa-user fa-lg" style={{marginLeft:-5+"px"}}></i>  <i class="fa-solid fa-user fa-lg" style={{marginLeft:-10+"px"}}></i></span>  <span > <b>$4500</b></span>  <div style={{width:15+"%",height:10+"px",marginTop:5+"px"}} class="progress">
-  <div class="progress-bar" role="progressbar" style={{width: 25+"%"}}aria-valuenow="23" aria-valuemin="0" aria-valuemax="100"></div>
-</div>
-            </div>
-            <hr />
-            <div style={{display:"flex",width:100+"%",justifyContent:"space-between"}}>
-            <span ><i class="fa-brands fa-microsoft fa-lg me-3"></i>Project name</span>  <span >  <i class="fa-solid fa-user fa-lg"></i>
-            <i class="fa-solid fa-user fa-lg" style={{marginLeft:-5+"px"}}></i>  <i class="fa-solid fa-user fa-lg" style={{marginLeft:-10+"px"}}></i></span>  <span > <b>$4500</b></span>  <div style={{width:15+"%",height:10+"px",marginTop:5+"px"}} class="progress">
-  <div class="progress-bar" role="progressbar" style={{width: 65+"%",backgroundColor:"green"}}aria-valuenow="23" aria-valuemin="0" aria-valuemax="100"></div>
-</div>
-            </div>
-            <hr />
-            <div style={{display:"flex",width:100+"%",justifyContent:"space-between"}}>
-            <span ><i class="fa-brands fa-microsoft fa-lg me-3"></i>Project name</span>  <span >  <i class="fa-solid fa-user fa-lg"></i>
-            <i class="fa-solid fa-user fa-lg" style={{marginLeft:-5+"px"}}></i>  <i class="fa-solid fa-user fa-lg" style={{marginLeft:-10+"px"}}></i></span>  <span > <b>$4500</b></span>  <div style={{width:15+"%",height:10+"px",marginTop:5+"px"}} class="progress">
-  <div class="progress-bar" role="progressbar" style={{width: 25+"%"}}aria-valuenow="23" aria-valuemin="0" aria-valuemax="100"></div>
-</div>
-            </div>
-           
-        </div>    
+          
         </div>
-        <div className="b shadow" style={{height:450+"px",width:27+"vw",backgroundColor:"white",borderRadius:13+"px",padding:25+"px"}}>
-        <div style={{border:"0px solid black",display:"flex",justifyContent:"space-between"}}>
-                <div><h4>Tasks</h4></div>
-                <div className="btn btn-success" onClick={()=>{
-                    setflag(false);
-                    ref2.current.click();
-                }}><i class="fa-solid fa-plus fa-xl me-2"></i><b>Create </b> </div>
-            
-
-            </div>
+        <div className="b shadow" style={window.innerWidth>1200?{height:450+"px",width:27+"vw",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",padding:25+"px",marginTop:"-20px"}:{width:"300px",height:450+"px",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",padding:25+"px",marginBottom:"40px"}}>
+            <h4> Tasks</h4>
             {/* <i class="fa-solid fa-arrow-up me-3 fa-lg" style={{color: "#39aa31"}}></i><b>24%</b> this month */}
             <hr />
             <div>
-               <div className="1" style={{height:80+"px",width:80+"%",borderLeft:"2px solid black",marginLeft:10+"Px"}}>
-               <div style={{backgroundColor:"white",height:30+"px",width:20+"px",marginLeft:-2.9+"%",marginRight:10+"px",display:"inline-block"}}><i class="fa-solid fa-list-check me-3 fa-lg" ></i>
+               <div className="1" style={{height:80+"px",width:80+"%",borderLeft:"0px solid white",marginLeft:10+"Px"}}>
+               <div style={{backgroundColor:"",height:30+"px",width:20+"px",marginLeft:-2.9+"%",marginRight:10+"px",display:"inline-block"}}><i class="fa-solid fa-list-check me-3 fa-lg" ></i>
              
                
 
@@ -271,8 +414,8 @@ return(<>
             </div>
             <hr />
             <div>
-            <div className="1" style={{height:80+"px",width:80+"%",borderLeft:"2px solid black",marginLeft:10+"Px"}}>
-               <div style={{backgroundColor:"white",height:30+"px",width:20+"px",marginLeft:-2.9+"%",marginRight:10+"px",display:"inline-block"}}><i class="fa-solid fa-list-check me-3 fa-lg" ></i>
+            <div className="1" style={{height:80+"px",width:80+"%",borderLeft:"0px solid white",marginLeft:10+"Px"}}>
+               <div style={{backgroundColor:"",height:30+"px",width:20+"px",marginLeft:-2.9+"%",marginRight:10+"px",display:"inline-block"}}><i class="fa-solid fa-list-check me-3 fa-lg" ></i>
              
                
 
@@ -287,8 +430,8 @@ return(<>
             </div>
             <hr />
             <div>
-            <div className="1" style={{height:80+"px",width:80+"%",borderLeft:"2px solid none",marginLeft:10+"Px"}}>
-               <div style={{backgroundColor:"white",height:30+"px",width:20+"px",marginLeft:-2.9+"%",marginRight:10+"px",display:"inline-block"}}><i class="fa-solid fa-list-check me-3 fa-lg" ></i>
+            <div className="1" style={{height:80+"px",width:80+"%",borderLeft:"0px solid none",marginLeft:10+"Px"}}>
+               <div style={{backgroundColor:"",height:30+"px",width:20+"px",marginLeft:-2.9+"%",marginRight:10+"px",display:"inline-block"}}><i class="fa-solid fa-list-check me-3 fa-lg" ></i>
              
                
 
@@ -297,7 +440,7 @@ return(<>
                <b>Task 3</b> <br />
                <span style={{marginLeft:10+"px",fontSize:"small"}}>22 DEC 7:20 PM</span>
                </div>
-               <div style={{marginLeft:12+"px",marginTop:12+"px"}}> <Link style={{color:"black",textDecoration:"none"}}to="/user1/tasks"><h6><b>Show more..</b></h6></Link></div>
+               <div style={{marginLeft:12+"px",marginTop:12+"px"}}> <Link style={{color:"white",textDecoration:"none"}}to="/user1/tasks"><h6><b>Show more..</b></h6></Link></div>
 
               
 
@@ -314,142 +457,10 @@ return(<>
 
 
       
+    </div>}
+    
     </div>
-   }
-    {
-      window.innerWidth<1200 &&<div className="d-flex" style={{position:"absolute",right:"0px",width:{desiredWidth2},justifyContent:"center",alignItems:"center",marginLeft:"100px",height:"100vh"}}>
-      <h1>THIS PAGE IS RESPONSIVE YET FOR SMALLER DEVICES TRY OTHER PAGES OR USE A DEVICE WITH BIGGER SCREEN</h1>
-    </div>
-    }
-    </div>
-    <button type="button" ref={ref} class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style={{display:"none"}}>
-  Launch demo modal
-</button>
-
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{zIndex:+1000000}} >
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content"style={{height:80+"vh",overflowY:"auto"}}>
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Campaign</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form>
-      <div class="modal-body">
-      
-  <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label">Name</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
-    {/* <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> */}
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label">Budget</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
-    {/* <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> */}
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputPassword1" class="form-label">Description</label>
-    <textarea type="password" class="form-control" id="exampleInputPassword1"/>
-  </div>
- 
- 
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        {/* <button type="button" class="btn btn-primary">Save changes</button> */}
-        <button type="submit" class="btn btn-success">Add Campaign</button>
-      </div>
-      </form>
-
-    </div>
-  </div>
-</div>
-    <button type="button" ref={ref2} class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2" style={{display:"none"}}>
-  Launch demo modal
-</button>
-
-
-<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{zIndex:+1000000}} >
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content"style={{height:"fit-content"}}>
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Assign Task</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      { flag &&       <form>
-      <div class="modal-body">
-      
-  <div class="mb-3">
-   
-    <label for="exampleInputEmail1" class="form-label">Name</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
-    {/* <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> */}
-  </div>
-  
-  <div class="mb-3">
-    <label for="exampleInputPassword1" class="form-label">Description</label>
-    <textarea type="password" class="form-control" id="exampleInputPassword1"/>
-  </div>
- 
- 
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        {/* <button type="button" class="btn btn-primary">Save changes</button> */}
-        <button type="submit" class="btn btn-success">Assign Task</button>
-      </div>
-      </form> }
-      {
-        !flag && <div>
-        <div class="modal-body" style={{height:40+"vh",overflowY:"auto"}}>
-
-        {
-  details
-    .filter((e) => e.type === "teacher" )
-    .map((e, index) => (
-      <div className="teachercard"
-        key={index}
-        style={{
-          width: "96%",
-          height: "50px",
-          border: "0px solid black",
-          margin: "2%",
-          display:"flex",
-          justifyContent:"space-between",
-          alignItems:"center",
-          borderRadius:"10px",
-        
-          padding:"10px"
-          
-         
-
-
-        }} onClick={()=>{
-            setflag(true);
-        }}
-      >
-        <h6 style={{marginBottom:"0px"}}><i class="fa-solid fa-user fa-lg me-3"></i><b>{e.name}</b></h6>
-        
-      </div>
-    ))
-}
-        
-  
-   
-   
-  
-        </div>
-      
-        </div>
-  
-      }
-      
-    </div>
-  </div>
-</div>
-    </>)
+  )
 }
 
 export default Dashboard

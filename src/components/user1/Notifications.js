@@ -8,21 +8,37 @@ import Sidebar_2 from "./Sidebar_2";
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
 
+import Tabs from './Tabs';
+import { useTheme } from '../context/ThemeContext';
+import Notitoggle from '../Notitoggle';
+
 const Notifications = (props) => {
   const[flag,setflag]=useState(false);
   const {flag2,setflag2}=useContext(Flagcontext);
   const[assignments,setAssignments]=useState([]);
   const[modal,setModal]=useState({title:"",content:"",dueDate:""});
+  const[togglenoti,setTogglenoti]=useState(false);
+  const { isDarkTheme ,SetGNotifications,update,setUpdate,gNotifications} = useTheme();
+  
   let teacher=false;
   useEffect(()=>{
+    setUpdate(false);
     if(window.innerWidth<1200){
       console.log("innerwidth",window.innerWidth);
       setflag2(false);
+      
       
   
     }
 
   },[])
+
+  // useEffect(()=>{
+
+  //   SetGNotifications(assignments);
+    
+  // },[assignments])
+ 
 
     var desiredWidth = !flag2 ? 80+"px" : '260px';
     // const desiredWidth2 = !flag2 ? '87vw' : '80vw';
@@ -50,14 +66,14 @@ console.log("lib",library);
     const elements = document.querySelectorAll(".dashboard");
 
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
   }
   else{
     const elements = document.querySelectorAll("."+library);
 
 elements.forEach(function(element) {
-    element.style.backgroundColor = "#E73673";
+    element.style.backgroundColor = "#8F4FBE";
 });
 
   }
@@ -139,12 +155,16 @@ elements.forEach(function(element) {
       }
     };
 
-    useEffect(()=>{
-      fetchassignment({_id:"65ad86007e68b80505716a7e"});
-    },[])
+    // useEffect(()=>{
+    //   fetchassignment({_id:"65ad86007e68b80505716a7e"});
+    // },[])
+  
+    
+    // alert(dark);
+
   
   return (<>
-    <div className='mainbg'>
+    <div className='mainbg' style={{backgroundColor: isDarkTheme ? "#181822" : "#E6EDFA"}}>
     {1 &&  <div className="sidebar" style={{position:"relative",width:desiredWidth,transition:"0.3s"}}>
       {
         !flag2 &&<i class=" arrow fa-solid fa-arrow-right fa-xl ml-5 mx-3 " style={{position:"absolute",right:"10px",marginLeft:"200px",top:"37px"}} onClick={()=>{
@@ -200,39 +220,36 @@ elements.forEach(function(element) {
 
 
     
-    <div className="notificationbg bg" style={{width:desiredWidth2,transition:"0.3s"}}>     
+    <div className="notificationbg bg" style={{width:desiredWidth2,transition:"0.3s",color:"white",backgroundColor: isDarkTheme ? "#181822" : "#E6EDFA",color:isDarkTheme?"white":"black"}}>     
       
 
     
 
     <div className="notifications" style={{width:desiredWidth3}}>
-   <div className="text-left pt-3 pl-5  pe-5 " style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between",border:"0px solid black",width:78+"vw",position:"absolute",top:10+"px",zIndex:1000000}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div className='sidetextbar'><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-style={{cursor:"pointer",color:"red"}}
-onClick={()=>{
-  
-  navigate("/");
-  localStorage.removeItem("token")
-  localStorage.removeItem("token2")
-  props.showAlert("logged out successfully","danger")
+   <Notitoggle></Notitoggle>
+
+<div className="a shadow notibigbox " style={{height:75+"vh",width:77+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",backgroundColor: isDarkTheme ? "#302341" : "white"
+
+}}>
  
-  
 
-}}
->Logout</span></div></div>
-
-<div className="a shadow notibigbox " style={{height:76+"vh",width:77+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px"}}>
 
  
 <h4 style={{marginTop:15+"px",marginBottom:27+"px"}}><b><i class="fa-solid fa-envelope fa-lg ml-5 me-3 "></i>Notifications</b></h4>
         {/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
          
-        <div style={{height:56+"vh",width:100+"%",overflowY:"scroll",display:"flex",marginLeft:10+"px",marginLeft:"5px"}} className='anobox'>
+        {
+          gNotifications.length===0 && <h5 style={{marginLeft:"45%",marginTop:"10%"}}><b>No Notifications</b></h5>  
+        }
+        {
+          gNotifications.length!==0 && <>
+
+<div style={{height:56+"vh",width:100+"%",overflowY:"scroll",display:"flex",marginLeft:10+"px",marginLeft:"5px"}} className='anobox'>
             <hr />
             <div className="a anotitlesmall" style={{border:"0px solid black",height:100+"%"}} >
                 <hr />
             <div className='my-3 p-1 anotext ' style={{}}><b>Title</b></div><hr />
-            {assignments.map((i)=>{
+            {gNotifications.map((i)=>{
                     return(<>
                         <div className='my-3 p-1 anotext'style={{height:41+"px"}}onClick={()=>{
                             ref.current.click();
@@ -244,10 +261,11 @@ onClick={()=>{
             </div>
             <div className="a classsec" style={{border:"0px solid black",height:100+"%",width:27+"%"}}>
                 <hr />
-            <div className='my-3 p-1 anotext ' style={{}}><b>Auther</b></div><hr />
-            {assignments.map((i)=>{
+            <div className='my-3 p-1 anotext ' style={{}}><b>Class</b></div><hr />
+            
+            {gNotifications.map((i)=>{
                     return(<>
-                        <div className='my-3 p-1' style={{fontSize:22+"px",height:41+"px"}}>D</div><hr />
+                        <div className='my-3 p-1' style={{fontSize:18+"px",height:41+"px"}}>{i.class.subjectCode}</div><hr />
                         </> )
 
                 })}
@@ -255,7 +273,7 @@ onClick={()=>{
             <div className="a createdsec" style={{border:"0px solid black",height:100+"%",width:27+"%"}}>
                 <hr />
             <div className='my-3 p-1 anotext ' style={{}}>{teacher && <b>Created</b>}{!teacher && <b>Recieved</b>}</div><hr />
-            {assignments.map((i)=>{
+            {gNotifications.map((i)=>{
               // console.log("i",i);
               const date = new Date(i.createdAt);
 
@@ -271,7 +289,7 @@ onClick={()=>{
             <>
             <div className='my-3 p-1 anotext' style={{}}><b>...</b></div><hr />
                         </>
-                {assignments.map((i)=>{
+                {gNotifications.map((i)=>{
                     return(<>
                         <div className='my-3'><div style={{height:41+"px"}} onClick={()=>{
                             ref.current.click();
@@ -286,7 +304,16 @@ onClick={()=>{
 
             
 
-        </div> 
+        </div> </>
+          
+          
+          
+          
+          
+          
+           
+        }
+
     </div>
 
 

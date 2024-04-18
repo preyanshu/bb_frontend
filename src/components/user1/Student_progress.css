@@ -1,5 +1,17 @@
+.progdata{
+    border-radius:23px;
+    background-color: #181822;
+    color:white;
+}
+
+
+
+
 .progdata:hover{
     scale:1.05;
     transition: 0.2s;
 
 }
+
+
+

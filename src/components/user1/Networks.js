@@ -10,6 +10,8 @@ import {getSender }from "../chatlogics"
 import Sidebar_2 from "./Sidebar_2";
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
+import Notitoggle from '../Notitoggle';
+import { useTheme } from '../context/ThemeContext';
 
 const Networks = (props) => {
   const location=useLocation();
@@ -42,14 +44,14 @@ console.log("lib",library);
     const elements = document.querySelectorAll(".dashboard");
 
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
   }
   else{
     const elements = document.querySelectorAll("."+library);
 
 elements.forEach(function(element) {
-    element.style.backgroundColor = "#E73673";
+    element.style.backgroundColor = "#8F4FBE";
 });
 
   }
@@ -143,7 +145,8 @@ elements.forEach(function(element) {
   
           } catch (error) {
               setLoading(false);
-              alert(error);
+              // alert(error);
+              console.log(error);
           }
       }
   
@@ -177,9 +180,9 @@ elements.forEach(function(element) {
       }
       
   
-      const shownoti = () =>{
-        setShownot(!shownot);
-      }
+     
+
+      const {isDarkTheme}=useTheme();
   return (<>
     <div className='mainbg'>
        {1 &&  <div className="sidebar" style={{position:"relative",width:desiredWidth,transition:"0.3s"}}>
@@ -233,28 +236,18 @@ elements.forEach(function(element) {
    
    
     </div>}
-    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s"}}>     
+    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s",backgroundColor:isDarkTheme?"#181822":"#E6EDFA",color:isDarkTheme?"white":"black"}}>     
       
 
     
 
-    <div className="notifications" style={{width:desiredWidth3,transition:"0.3s"}}>
-   <div className="text-left pt-3 pl-5  pe-5" style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between",border:"0px solid black",width:78+"vw",position:"absolute",top:10+"px",zIndex:1000000}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div className='sidetextbar'><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-style={{cursor:"pointer",color:"red"}}
-onClick={()=>{
-  
-  navigate("/");
-  localStorage.removeItem("token")
-  localStorage.removeItem("token2")
-  props.showAlert("logged out successfully","danger")
- 
-  
+    <div className="notifications" style={{width:desiredWidth3,transition:"0.3s",position:"relative"}}>
+    <img src="../BBCrm (2) (1).png" alt="" style={{width:"30%",height:"auto",top:"12px",zIndex:"+100",position:"absolute",left:"26%"}} />
+  <Notitoggle></Notitoggle>
 
-}}
->Logout</span></div></div>
+<div className="a shadow " style={{height:60+"vh",width:77+"vw",backgroundColor:isDarkTheme?"#22222E":"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",overflowY:"scroll",position:"relative"}}
+>
 
-<div className="a shadow " style={{height:80+"vh",width:77+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px"}}>
 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}> <h4 style={{marginTop:15+"px",marginBottom:27+"px",display:"inline-block",width:"fit-content"}}><b><i class="fa-solid fa-list-check fa-lg ml-5 me-3 "></i><span class="netxt">Networks</span></b></h4>
         {/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
 
@@ -284,16 +277,16 @@ onClick={()=>{
 ) 
 :
 
- 
+  
     searchResult.map((u) =>{
-        return (<> <hr /><div className=""style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
+        return (<> <br /><div className=""style={{display:"flex",width:100+"%",justifyContent:"space-between",alignItems:"center"}}>
         <span > <img  className="me-3" src={u.pic} style={{width: "30px", borderRadius: "50%"}} alt="" />{u.name}</span>  
         {/* <span >  <i class="fa-brands fa-linkedin fa-lg me-3"></i>
         Linkedin  </span> */}
          <div className="btn btn-primary" onClick={()=>{
           alert("functionality not added yet")
     // ref.current.click();
-}}>Connect</div>
+}} style={{backgroundColor:"#10ADAC",border:"0px",color:"black"}}>Connect</div>
 
         </div>
 

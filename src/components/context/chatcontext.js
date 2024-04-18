@@ -19,6 +19,7 @@ const ChatProvider = ({children}) =>{
         setUser(userinfo);        
 
     }, [])
+
     const [loading, setLoading] = useState(false);
 
      

@@ -5,7 +5,7 @@ import "./signup.css";
 
 const Signup = (props) => {
     const {showAlert}=props
-    const [credentials, setCredentials] = useState({name:"",email: "", password: "",cpassword:"",type:"",rollno:"",semester:"",section:"",branch:""}) 
+    const [credentials, setCredentials] = useState({name:"",email: "", password: "",cpassword:"",type:"",rollno:"",semester:"",section:"",branch:"",childEmail:""}) 
     const[type,setType]=useState("1");
     const [loading, setLoading] = useState(false) 
     
@@ -19,9 +19,9 @@ const Signup = (props) => {
       let url = '';
 
 if (type === "2"||type==="3") {
-  url = 'https://classroom-backend-uow6.onrender.com/auth/registerTeacher';
+  url = 'http://localhost:5000/auth/registerTeacher';
 } else if (type === "1") {
-  url = 'https://classroom-backend-uow6.onrender.com/auth/registerStudent';
+  url = 'http://localhost:5000/auth/registerStudent';
 }
         if (credentials.password !== credentials.cpassword) {
             setLoading(false);
@@ -42,7 +42,8 @@ if (type === "2"||type==="3") {
                 rollno:credentials.rollno,
                 semester:credentials.semester,
                 section:credentials.section,
-                branch:credentials.branch
+                branch:credentials.branch,
+                childEmail:credentials.childEmail
 
                 
               }),
@@ -70,14 +71,16 @@ if (type === "2"||type==="3") {
            }
            else if(json.error){
              alert(json.error);
+            
            }
            else{
              alert("Something went wrong");
            }
-         
+           setLoading(false);
         
            
          } catch (error) {
+          setLoading(false);
            alert("Internal Server Error");
          }
     }
@@ -93,12 +96,13 @@ if (type === "2"||type==="3") {
 
 
   return (
-    <div id='signuppage'>
+    <div id='signuppage' style={{backgroundColor:"#181822",top:"0px",position:"absolute",color:"white"}}>
         <div className='sidetextbar2'>
-            <img src="cartoon-os-upgrade.png" style={{width:35+"vw",height:"auto",minWidth:270+"px",marginLeft:10+"px"}} alt="" />
+            {/* <img src="cartoon-os-upgrade.png"alt="" /> */}
+            <dotlottie-player src="https://lottie.host/ab3e573b-6a8a-4639-9f8d-529866fe410e/YICqDJBGxH.json" background="transparent" speed="1"  loop autoplay  style={{width:35+"vw",height:"auto",minWidth:270+"px",marginLeft:10+"px"}} ></dotlottie-player>
         </div>
 
-    <div className='container' id='spg'>
+    <div className='container' id='spg' style={{color:"white"}}>
         {!loading &&  <h1 className='text-center pb-3'><b>Welcome!</b></h1>}
            
             {loading && <h1 className='text-center'>LOADING..</h1>}
@@ -106,12 +110,12 @@ if (type === "2"||type==="3") {
             <div className="mb-3 d-flex" style={{justifyContent:"space-between"}}>
                 <div style={{width:60+"%",display:"inline-block"}}>
                 <label htmlFor="name" className="form-label"><b>Name</b></label>
-                    <input type="text" className="form-control" value={credentials.name} onChange={onChange} id="name" name="name" aria-describedby="emailHelp" />
+                    <input type="text" className="form-control" value={credentials.name} onChange={onChange} id="name" name="name" aria-describedby="emailHelp"  style={{borderRadius:"8px"}} min={3} />
                     <div id="emailHelp" className="form-text"></div>
                 </div>
                 <div className="ura" style={{}}> 
                     <label htmlFor="name" className="form-label"><b>You are a ?</b></label>
-                <select class="form-select"  aria-label="Default select example" style={{border:"2px solid green",borderRadius:0+"px"}} value={type} onChange={onChange2} id="type" name="type" required >
+                <select class="form-select"  aria-label="Default select example" style={{border:"2px solid green",borderRadius:8+"px"}} value={type} onChange={onChange2} id="type" name="type" required >
   {/* <option selected>Open this select menu</option> */}
   <option value="1">Student</option>
   <option value="2">Teacher</option>
@@ -119,39 +123,52 @@ if (type === "2"||type==="3") {
 </select></div>
                
                 </div>
+
+
+                {type==="3"&& <>
+
+                <div className="mb-3">
+                    <label htmlFor="email" className="form-label"><b>Child Email</b></label>
+                    <input type="email" className="form-control" value={credentials.childEmail} onChange={onChange} id="childEmail" name="childEmail" aria-describedby="emailHelp" style={{borderRadius:"8px"}} />
+                    {/* <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div> */}
+                </div>
+                
+                
+                </>}
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label"><b>Email address</b></label>
-                    <input type="email" className="form-control" value={credentials.email} onChange={onChange} id="email" name="email" aria-describedby="emailHelp" />
+                    <input type="email" className="form-control" value={credentials.email} onChange={onChange} id="email" name="email" aria-describedby="emailHelp" style={{borderRadius:"8px"}} />
                     {/* <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div> */}
                 </div>
             {type=="1" && <div className="mb-3 d-flex type1box" style={{justifyContent:"space-between"}}>
                 <div style={{display:"inline-block"}}>
                 <label htmlFor="name" className="form-label"><b>Your RollNo?</b></label>
-                    <input type="text" className="form-control" value={credentials.rollno} onChange={onChange} id="rollno" name="rollno" aria-describedby="emailHelp" />
+                    <input type="text" className="form-control" value={credentials.rollno} onChange={onChange} id="rollno" name="rollno" aria-describedby="emailHelp"  style={{borderRadius:"8px"}}/>
                     <div id="emailHelp" className="form-text"></div>
                 </div>
                 <div style={{}}> 
                     <label htmlFor="name" className="form-label"><b>Section :</b></label>
-                    <input type="text" className="form-control" value={credentials.section} onChange={onChange} id="section" name="section" aria-describedby="emailHelp" max={1} />
+                    <input type="text" className="form-control" value={credentials.section} onChange={onChange} id="section" name="section" aria-describedby="emailHelp" max={1} style={{borderRadius:"8px"}} />
                </div>
                 <div style={{}}> 
                     <label htmlFor="name" className="form-label"><b>Semester :</b></label>
-                    <input type="number" className="form-control" value={credentials.semester} onChange={onChange} id="semester" name="semester" aria-describedby="emailHelp"  max={8}/>
+                    <input type="number" className="form-control" value={credentials.semester} onChange={onChange} id="semester" name="semester" aria-describedby="emailHelp"  max={8} style={{borderRadius:"8px"}}/>
                </div>
                 <div style={{}}> 
                     <label htmlFor="name" className="form-label"><b>Branch :</b></label>
-                    <input type="text" className="form-control" value={credentials.branch} onChange={onChange} id="branch" name="branch" aria-describedby="emailHelp" />
+                    <input type="text" className="form-control" value={credentials.branch} onChange={onChange} id="branch" name="branch" aria-describedby="emailHelp" style={{borderRadius:"8px"}} />
                </div>
                
                 </div>}
+
              
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label"><b>Password</b></label>
-                    <input type="password" className="form-control" value={credentials.password} onChange={onChange} name="password" id="password" minLength={5} required />
+                    <input type="password" className="form-control" value={credentials.password} onChange={onChange} name="password" id="password" minLength={5} required style={{borderRadius:"8px"}} />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="cpassword" className="form-label"><b>Confirm Password</b></label>
-                    <input type="password" className="form-control" value={credentials.cpassword} onChange={onChange} name="cpassword" id="cpassword" minLength={5} required/>
+                    <input type="password" className="form-control" value={credentials.cpassword} onChange={onChange} name="cpassword" id="cpassword" minLength={5} required style={{borderRadius:"8px"}}/>
                 </div>
 
                 <button type="submit mt-3" className="btn btn-success" id="spg_btn" style={{height:50+"px",width:200+"px",marginTop:10+"px"}}><b>Submit</b></button>

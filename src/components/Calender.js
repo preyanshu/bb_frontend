@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   SevenColGrid,
   Wrapper,
@@ -20,29 +20,52 @@ import {
   range,
   sortDays
 } from "./utils";
+import { useTheme } from './context/ThemeContext';
 
 export const Calender = () => {
-  const [currentDate, setCurrentDate] = useState(new Date(2022, 9, 6));
+  const [currentDate, setCurrentDate] = useState(new Date());
+
   const [events, setEvents] = useState(MOCKAPPS);
   const dragDateRef = useRef();
   const dragindexRef = useRef();
   const [showPortal, setShowPortal] = useState(false);
   const [portalData, setPortalData] = useState({});
+  const {setevents,setdate,setCurrent,Event}=useTheme();
 
   const addEvent = (date, event) => {
     if (!event.target.classList.contains("StyledEvent")) {
-      const text = window.prompt("name");
-      if (text) {
-        date.setHours(0);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        setEvents((prev) => [
-          ...prev,
-          { date, title: text, color: getDarkColor() }
-        ]);
-      }
+      // const text = window.prompt("name");
+      // if (text) {
+      //   date.setHours(0);
+      //   date.setSeconds(0);
+      //   date.setMilliseconds(0);
+      //   // console.log("events",events);
+      //   setEvents((prev) => [
+      //     ...prev,
+      //     { date, title: text, color: getDarkColor() }
+      //   ]);
+      // }
     }
   };
+
+  useEffect(()=>{
+    setEvents(localStorage.getItem("events")?JSON.parse(localStorage.getItem("events")):[]);
+
+  },[])
+  useEffect(()=>{
+    setevents(events);
+
+
+  },[events])
+
+
+
+
+
+  useEffect(()=>{
+    setCurrent(currentDate);
+  
+  },[currentDate])
 
   const drag = (index, e) => {
     dragindexRef.current = { index, target: e.target };
@@ -124,7 +147,7 @@ export const Calender = () => {
             }
             onDragOver={(e) => e.preventDefault()}
             onDragEnd={drop}
-            onClick={(e) =>
+            onClick={(e) =>{
               addEvent(
                 new Date(
                   currentDate.getFullYear(),
@@ -132,8 +155,16 @@ export const Calender = () => {
                   day
                 ),
                 e
-              )
+              );
+
+
+              setdate(e.target.id);
+            
+
             }
+             
+            }
+            style={{position:"relative"}}
           >
             <span
               className={`nonDRAG ${
@@ -148,31 +179,41 @@ export const Calender = () => {
                   ? "active"
                   : ""
               }`}
+              style={{position:"absolute",bottom:"0px",right:"0px"}}
             >
               {day}
             </span>
             <EventWrapper className="eventwrapper">
-              {events.map(
+              {Event.map(
                 (ev, index) =>
                   datesAreOnSameDay(
-                    ev.date,
+                    new Date(ev.date),
                     new Date(
                       currentDate.getFullYear(),
                       currentDate.getMonth(),
                       day
                     )
                   ) && (
-                    <StyledEvent
+                    <div
                       onDragStart={(e) => drag(index, e)}
                       onClick={() => handleOnClickEvent(ev)}
                       draggable
                       className="StyledEvent event"
                       id={`${ev.color} ${ev.title}`}
                       key={ev.title}
-                      bgColor={ev.color}
+                      style={{
+                        height:"10px",
+                        width:"10px",
+                        borderRadius:"100%",
+                        backgroundColor:ev.color,
+                        position:"absolute",
+                        top:"8px",
+                        left:"8px"
+                      }}
+
                     >
-                      {ev.title}
-                    </StyledEvent>
+                      
+                    </div>
                   )
               )}
             </EventWrapper>
@@ -195,27 +236,18 @@ const EventWrapper = ({ children }) => {
     return (
       <>
         {children}
-        {children.filter((child) => child).length > 2 && (
-          <SeeMore
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log("clicked p");
-            }}
-          >
-            see more...
-          </SeeMore>
-        )}
+        
       </>
     );
 };
 
 const Portal = ({ title, date, handleDelete, handlePotalClose }) => {
   return (
-    <PortalWrapper>
-      <h2>{title}</h2>
-      <p>{date.toDateString()}</p>
-      <ion-icon onClick={handleDelete} name="trash-outline"></ion-icon>
-      <ion-icon onClick={handlePotalClose} name="close-outline"></ion-icon>
+    <PortalWrapper style={{zIndex:+1000000000000000,width:"31vw",height:"fit-content",backgroundColor:"#22222E",minWidth:"270px"}}>
+      <h5  className="mb-4" style={{color:"white"}}>Are you Sure you want to delete the event? </h5>
+      {/* <p style={{color:"black"}}>{new Date(date).toDateString()}</p> */}
+      <ion-icon onClick={handleDelete}  style={{height:"20px",width:"20px"}} name="trash-outline"></ion-icon>
+      <ion-icon onClick={handlePotalClose} style={{height:"20px",width:"20px"}} name="close-outline"></ion-icon>
     </PortalWrapper>
   );
 };

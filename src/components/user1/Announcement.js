@@ -4,6 +4,8 @@ import { Link, useLocation,useNavigate} from "react-router-dom";
 import Sidebar_2 from "./Sidebar_2";
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
+import Notitoggle from '../Notitoggle';
+import { useTheme } from '../context/ThemeContext';
 
 const Announcement = (props) => {
   let teacher=false;
@@ -11,16 +13,25 @@ const Announcement = (props) => {
   const {flag2,setflag2}=useContext(Flagcontext);
   const [data,setData]=useState([]);
   const [modal,setModal]=useState({title:"",content:""});
+  const {gAnnouncements,SetGAnnouncements,gNotifications,SetGNotifications,setUpdate,loading_ano}=useTheme();
   
   useEffect(()=>{
+    setUpdate(false);
     if(window.innerWidth<1200){
       console.log("innerwidth",window.innerWidth);
       setflag2(false);
+      
       
   
     }
 
   },[])
+
+  // useEffect(()=>{
+
+  //   SetGAnnouncements(data);
+    
+  // },[data])
 
     var desiredWidth = !flag2 ? 80+"px" : '260px';
     // const desiredWidth2 = !flag2 ? '87vw' : '80vw';
@@ -48,7 +59,7 @@ const Announcement = (props) => {
     teacher=false;
   }
 useEffect(()=>{
-  fetchannouncement({ _id: "65ad86007e68b80505716a7e" });
+  // fetchannouncement({ _id: "65ad86007e68b80505716a7e" });
     const parts = location.pathname.split('/');
 const library = parts[parts.length - 1];
 console.log("lib",library);
@@ -58,14 +69,14 @@ console.log("lib",library);
     const elements = document.querySelectorAll(".dashboard");
 
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
   }
   else{
     const elements = document.querySelectorAll("."+library);
 
 elements.forEach(function(element) {
-    element.style.backgroundColor = "#E73673";
+    element.style.backgroundColor = "#8F4FBE";
 });
 
   }
@@ -106,7 +117,7 @@ function getTimeDifference(messageTime) {
 }
 const fetchannouncement = async (e) => {
   try {
-    const token = (teacher) ? `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YWQ4NGJmN2U2OGI4MDUwNTcxNmE1OCIsImlhdCI6MTcwNTg3MDUyN30.Nk0EktNhRHXlBTGJgXjozXuIxnUhu-24KHBl838lMpQ` : `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YWQ4N2Q3N2U2OGI4MDUwNTcxNmFlMCIsImlhdCI6MTcwNTg3MTMyMH0.Q-du9LIV4-URvFpj1OO6D8Lm4XWLOewiwpBonSFkB6g`;  
+    const token = (teacher) ? `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YWQ4NGJmN2U2OGI4MDUwNTcxNmE1OCIsImlhdCI6MTcwNTg3MDUyN30.Nk0EktNhRHXlBTGJgXjozXuIxnUhu-24KHBl838lMpQ` : `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZjMxZTJiOTRmMjlkNTI5ZjA1MGQ0MyIsImlhdCI6MTcxMDQzMjYxMH0.nFlfZLUgVvlyVX9yBo09yJ-KpipYqLaI-uO0FNKoeII`;  
     
 
     const requestOptions = {
@@ -142,9 +153,10 @@ const fetchannouncement = async (e) => {
     // Handle error as needed
   }
 };
+const {isDarkTheme}=useTheme();
 
   return (<>
-    <div className='mainbg'>
+    <div className='mainbg' style={{backgroundColor:isDarkTheme?"#181822":"#E6EDFA"}}>
        {1 &&  <div className="sidebar" style={{position:"relative",width:desiredWidth,transition:"0.3s"}}>
       {
         !flag2 &&<i class=" arrow fa-solid fa-arrow-right fa-xl ml-5 mx-3 " style={{position:"absolute",right:"10px",marginLeft:"200px",top:"37px"}} onClick={()=>{
@@ -201,33 +213,26 @@ const fetchannouncement = async (e) => {
 
     
 
-    <div className="notifications" style={{width:desiredWidth3,transition:"0.3s"}}>
-    <div className="text-left pt-3 pl-5  pe-5" style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between",border:"0px solid black",width:78+"vw",position:"absolute",top:10+"px",zIndex:1000000}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-style={{cursor:"pointer",color:"red"}}
-onClick={()=>{
-  
-  navigate("/");
-  localStorage.removeItem("token")
-  localStorage.removeItem("token2")
-  props.showAlert("logged out successfully","danger")
- 
-  
+    <div className="notifications" style={{width:desiredWidth3,transition:"0.3s",color:isDarkTheme?"white":"black",backgroundColor:isDarkTheme?"#181822":"#E6EDFA"}}>
+    <Notitoggle></Notitoggle>
 
-}}
->Logout</span></div></div>
-
-<div className="a shadow " style={{height:76+"vh",width:77+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:45+"px",marginTop:30+"px"}}>
+<div className="a shadow " style={{height:75+"vh",width:77+"vw",backgroundColor:isDarkTheme?"#302341":"white",borderRadius:13+"px",border:"0px solid black",padding:45+"px",marginTop:30+"px"}}>
 
         <h4  className="anotitle" style={{marginTop:15+"px",marginBottom:27+"px"}}><b><i class="fa-solid fa-bullhorn fa-lg ml-5 me-3 "></i>Announcements</b></h4>
         {/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
-         
-        <div  className="anobox" style={{height:56+"vh",width:100+"%",overflowY:"scroll",display:"flex",marginLeft:10+"px",marginLeft:"5px"}}>
+
+        {loading_ano && <div className="text-center" style={{marginTop:10+"vh"}}><h5>No Announcements</h5></div> }
+
+         {!loading_ano && gAnnouncements.length===0 && <div className="text-center" style={{marginTop:10+"vh"}}><h5>No Announcements</h5></div>}
+        {gAnnouncements.length>0 && <>
+          <div  className="anobox" style={{height:56+"vh",width:100+"%",overflowY:"scroll",display:"flex",marginLeft:10+"px",marginLeft:"5px"}}>
             <hr />
             <div className="a anotitlesmall" style={{border:"0px solid black",height:100+"%",}}>
                 <hr />
             <div className='my-3 p-1 textano' style={{}}><b>Title</b></div><hr />
-            {data.map((i)=>{
+            { console.log("g",gAnnouncements)}
+            {gAnnouncements.map((i)=>{
+             
                     return(<>
                         <div className='my-3 p-1 textano'style={{height:41+"px"}} onClick={()=>{
                             ref.current.click();
@@ -240,9 +245,9 @@ onClick={()=>{
             <div className="a classsec" style={{border:"0px solid black",height:100+"%",width:27+"%"}}>
                 <hr />
             <div className='my-3 p-1 textano' style={{}}><b>Class Section</b></div><hr />
-            {data.map((i)=>{
+            {gAnnouncements.map((i)=>{
                     return(<>
-                        <div className='my-3 p-1 textano' style={{height:41+"px"}}>D</div><hr />
+                        <div className='my-3 p-1 textano' style={{height:41+"px"}}>{i.class.subjectCode}</div><hr />
                         </> )
 
                 })}
@@ -250,7 +255,7 @@ onClick={()=>{
             <div className="a createdsec " style={{border:"0px solid black",height:100+"%",width:27+"%"}}>
                 <hr />
             <div className='my-3 p-1 textano' style={{}}>{teacher && <b>Created</b>}{!teacher && <b>Recieved</b>}</div><hr />
-            {data.map((i)=>{
+            {gAnnouncements.map((i)=>{
               // console.log("i",i);
               const date = new Date(i.createdAt);
 
@@ -266,7 +271,7 @@ onClick={()=>{
             <>
             <div className='my-3 p-1 textano' style={{}}><b>...</b></div><hr />
                         </>
-                {data.map((i)=>{
+                {gAnnouncements.map((i)=>{
                     return(<>
                         <div className='my-3'><div style={{height:41+"px"}} onClick={()=>{
                             ref.current.click();
@@ -282,6 +287,10 @@ onClick={()=>{
             
 
         </div>
+        
+        
+        
+        </>}
     </div>
 
 

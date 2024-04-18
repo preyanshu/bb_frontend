@@ -7,7 +7,7 @@ export const Userlist = ({u, handleClick}) => {
 
  
   return (
-    <div className="container my-2" style={{overflowY: "auto"}} >
+    <div className="container my-3" style={{overflowY: "auto"}} >
       <div className='row'>
           <div className=" d-flex align-items-center py-2 col-12 userSch" onClick={handleClick}>
             <img src={u.pic} style={{width: "50px", borderRadius: "50%"}} alt="" />

@@ -32,9 +32,11 @@ body{
     top: 0px;
     right: 0px;
     height: 100vh;
-    width: 80vw;
+    /* width: 100vw; */
     overflow-x: none;
     overflow-y: scroll;
+    /* max-width: 3200px; */
+    margin-left: -800px;
 }
 .sidebar{
     width: 18vw;
@@ -69,7 +71,7 @@ body{
     padding-top: 36px;
 }
 .sidebar{
-    scrollbar-width: thin;
+    /* scrollbar-width: thin; */
     scrollbar-color: black;
    /* height: 90%; */
   }
@@ -98,7 +100,7 @@ body{
   }
 body{
     background-color: #F0F2F5;
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
 }
 #nothover:hover{
     background-color: #232325;

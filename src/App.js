@@ -31,11 +31,31 @@ import Student_attendence from "./components/user1/Student_attendence";
 import Student_progress from "./components/user1/Student_progress";
 import Underprocess from "./components/user1/Underprocess";
 import Flagstate from "./components/context/notes/Flagstate";
+import AOS from "aos";
+import { ThemeProvider } from './components/context/ThemeContext';
+import { useLocation } from "react-router-dom";
 
 
 function App() {
+
+  
+  // let teacher;
+
+  // const location=useLocation();
+  // // const navigate=useNavigate();
+
+  // if(location.pathname==="/user2/announcement"){
+  //   teacher=true;
+  // }
+  // else if(location.pathname==="/user1/announcement"){
+  //   teacher=false;
+  // }
+
   const [alert, setAlert] = useState(null);
   const [displayalert, setdisplayalert] = useState(false);
+  useEffect(() => {
+    AOS.init({ duration: 300 });
+  }, []);
 
   const showAlert = (message, type)=>{
     setdisplayalert(true)
@@ -58,6 +78,7 @@ function App() {
 
   return (<>
   <Flagstate>
+    <ThemeProvider>
   <ChatProvider>
   <Router>
     {/* <div className="App" style={{ width: 70 + "vw", overflowX: "scroll" }}>
@@ -114,6 +135,7 @@ function App() {
     <Route exact path="/user2/activities" element={<Underprocess showAlert={showAlert}></Underprocess>} />
     <Route exact path="/user3/activities" element={<Underprocess showAlert={showAlert}></Underprocess>} />
     <Route exact path="/user1/codeiann" element={<Underprocess showAlert={showAlert}></Underprocess>} />
+    <Route exact path="/user1/codeian" element={<Underprocess showAlert={showAlert}></Underprocess>} />
     <Route exact path="/user3/codeian" element={<Underprocess showAlert={showAlert}></Underprocess>} />
     <Route exact path="/user1/results" element={<Underprocess showAlert={showAlert}></Underprocess>} />
     <Route exact path="/user3/results" element={<Underprocess showAlert={showAlert}></Underprocess>} />
@@ -126,7 +148,9 @@ function App() {
     </div>
     
 </Router>
+
 </ChatProvider>
+</ThemeProvider>
 </Flagstate>
     </> );
 }

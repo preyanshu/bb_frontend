@@ -136,7 +136,7 @@ export const Sidedrawer = () => {
 
   return (
 
-    <div  className=" d-flex justify-content-center px-4" style={{width: "77vw", backgroundColor: "#E93A76" }} >
+    <div  className=" d-flex justify-content-center px-4" style={{width: "77vw", backgroundColor: "#302341" }} >
 
     <div className="d-flex my-2 justify-content-between" style={{width: "95vw" }}>
 
@@ -148,7 +148,7 @@ export const Sidedrawer = () => {
 
             <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)}>
 
-                <p style={{fontSize: "1.3rem"}}>Search Users
+                <p style={{fontSize: "1.3rem",visibility:"hidden",display:"none"}}>Search Users
                 <button  ref={ref}onClick={() => {
                   setIsOpen(!isOpen);
                   
@@ -161,14 +161,14 @@ export const Sidedrawer = () => {
               <div className='d-flex'>
                 <input
                         type="text"
-                        className="form-control"
+                        className="form-control mb-4"
                         id="floatingInput"
                         name="name"
                         placeholder="Search here"
                         onChange={ (e) =>handleClick(e.target.value)}
                         required
                     />
-                    <button onClick={handleClick} className='ms-3 btn btn-secondary' style={{backgroundColor: "#0d6efd"}}>Go</button>
+                    <button onClick={handleClick} className='ms-3 btn btn-secondary mb-4' style={{backgroundColor: "#8F4FBE"}}>Go</button>
                     </div>
 
                     
@@ -186,7 +186,7 @@ export const Sidedrawer = () => {
                              key={u._id} u={u}
                              handleClick={() => {accessChat(u._id)
                              
-                              setcount(count+1);
+                              setcount(c=>c+1);
                               console.log("count  :  ",count  )
                               if(count==1){
                                 ref.current.click()

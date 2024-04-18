@@ -7,10 +7,14 @@ import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
 
 import "./notifications.css"
+import Notitoggle from '../Notitoggle';
+// import { useTheme } from 'styled-components';
+import { useTheme } from '../context/ThemeContext';
 
 const Feedback= (props) => {
   const[flag,setflag]=useState(false);
   const {flag2,setflag2}=useContext(Flagcontext);
+  const {isDarkTheme}=useTheme();
   useEffect(()=>{
     if(window.innerWidth<1200){
       console.log("innerwidth",window.innerWidth);
@@ -39,14 +43,14 @@ console.log("lib",library);
     const elements = document.querySelectorAll(".dashboard");
 
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
   }
   else{
     const elements = document.querySelectorAll("."+library);
 
 elements.forEach(function(element) {
-    element.style.backgroundColor = "#E73673";
+    element.style.backgroundColor = "#8F4FBE";
 });
 
   }
@@ -57,43 +61,79 @@ elements.forEach(function(element) {
     const onChange = (e) => {
       setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
-    const handleSubmit = async (e) => {
-      e.preventDefault();
+    const [loading, setLoading] = useState(false);
+    
+  const onSubmit = async event => {
+    setLoading(true);
+    event.preventDefault();
+  
+    const { email, message } = credentials;
+    setCredentials({name: "", email: "",message:""});
+    
+     
+      // alert("Your message has been sent successfully")
+      // console.log(form.current);
+  
+      // emailjs
+      //   .sendForm('service_vlsqj1c', 'template_xd0uirn', form.current, {
+      //     publicKey: 'v5jg44syuVOknYpby',
+      //   })
+      //   .then(
+      //     () => {
+      //       console.log('SUCCESS!');
+      //       setComplete(true);
+      //     },
+      //     (error) => {
+      //       setSending(false);
+      //       setStatusError(error.text);
+      //       setComplete(true);
+      //       console.log('FAILED...', error.text);
+      //     },
+      //   );
 
-      // setLoading(true);
-      // const { email, password } = credentials;
-  
-      try {
-        const response = await fetch("http://localhost:5000/api/user/login", {
-          method: "POST",
+      
+
+        var data = {
+          service_id: 'service_vlsqj1c',
+          template_id: 'template_xd0uirn',
+          user_id: 'v5jg44syuVOknYpby',
+          template_params: {
+              'user_email':email,
+              'message':message
+          }
+      };
+
+      console.log("data",data);
+      
+      fetch('https://api.emailjs.com/api/v1.0/email/send', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+              'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            email:credentials.email,
-            password:credentials.password,
-          }),
-        });
-        // setLoading(false);
-        const json = await response.json();
-  
-        if (json.success) {
-          // setLoading(false);
-  
-          localStorage.setItem("token", JSON.stringify(json));
-          console.log("json",json);
+          body: JSON.stringify(data)
+      })
+      .then(function(response) {
+        setLoading(false);
+          if (response.ok) {
+            alert("Your message has been sent successfully");
+            console.log('SUCCESS!');
+            
+          } else {
           
-          // navigate("/user1");
-        }
-        
-        else {
-          // setLoading(false);
-          alert("Invalid Credentials");
-        }
-      } catch (error) {
-          alert(error);
-      }
-  }
+            alert("failed"+ response.statusText)
+            console.log('FAILED...', response.statusText)
+          }
+      })
+      .catch(function(error) {
+        setLoading(false);
+        alert("failed"+ error.message)
+        console.log('FAILED...', error.message);
+      });
+    
+
+  
+    
+  };
    
 
 
@@ -151,37 +191,24 @@ elements.forEach(function(element) {
    
    
     </div>}
-    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s"}}>     
+    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s",backgroundColor:isDarkTheme?"#181822":"#E6EDFA",color:isDarkTheme?"white":"black"}}>     
       
 
     
 
     <div className="notifications" style={{width:desiredWidth3,transition:"0.3s"}}>
-   <div className="text-left pt-3 pl-5  pe-5" style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between",border:"0px solid black",width:78+"vw",position:"absolute",top:10+"px",zIndex:1000000}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div className='sidetextbar'><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-style={{cursor:"pointer",color:"red"}}
-onClick={()=>{
-  
-  navigate("/");
-  localStorage.removeItem("token")
-  localStorage.removeItem("token2")
-  props.showAlert("logged out successfully","danger")
- 
-  
+   <Notitoggle></Notitoggle>
 
-}}
->Logout</span></div></div>
-
-<div className="a shadow " style={{height:80+"vh",width:76+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",display:"flex",justifyContent:"space-evenly"}}>
+<div className="a" style={{height:80+"vh",width:76+"vw",backgroundColor:isDarkTheme?"#181822":"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",display:"flex",justifyContent:"space-evenly",position:"relative",alignItems:"center"}}>
 
         {/* <h2 style={{marginTop:15+"px",marginBottom:12+"px",fontFamily:"sans-serif"}}><b>Get in Touch</b></h2>
         <span className='subtxt mb-5' style={{marginLeft:"5px",color:"darkgray",fontSize:"20px",marginBottom:"20px"}}>WE are here for You! How can we Help?</span> */}
         {/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
-        <div  className="feedform"style={{backgroundColor:"",height:75+"vh",marginTop:0+"px"}}>
+        <div  className="feedform"style={{backgroundColor:"",marginTop:0+"px"}}>
             <h2  className="mt-5 anotext" style={{marginTop:15+"px",marginBottom:12+"px",fontFamily:"sans-serif",marginLeft:"30px",fontWeight:"bold",color:""}}><b>Feedback Form</b></h2>
         {/* <span className='subtxt mb-5 my-3' style={{marginLeft:"35px",color:"darkgrey",fontSize:"20px",marginBottom:"40px",fontWeight:"bold"}}>WE are here for You! How can we Help?</span> */}
 
-        <form style={{width:80+"%",minWidth:300+"px",marginTop:20+"px"}} onSubmit={handleSubmit}>
+        <form style={{width:80+"%",minWidth:300+"px",marginTop:20+"px"}} onSubmit={onSubmit}>
         
 
 
@@ -195,35 +222,30 @@ onClick={()=>{
   <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com" style={{height:60+"px",backgroundColor:""}} name='name' onChange={onChange} required/>
   <label for="floatingInput" className='feedtext2'> Give Us a Score (1-10)</label>
 </div>
-  <div class="mb-5">
+  <div class="mb-3">
   <div class="form-floating">
   <input class="form-control" placeholder="Go ahead, We are listening" id="floatingTextarea2" style={{height: "150px",backgroundColor:"",overflowX:"scroll"}} name='message' onChange={onChange} required min={5}></input>
   <label  for="floatingTextarea2"> <span  class='feedtext2' style={{backgroundColor:"",margin:"0px",padding:"0px"}}>Please tell us your reasons for giving this score ...</span></label>
 </div>
   </div>
 
-  <button type="submit"  style={{height:60+"px",width:"100%",fontWeight:"bolder",fontSize:25+"px"}} class="btn btn-success " id=''> Submit</button>
+  {!loading && window.innerWidth>1100 && <button type="submit "  style={{height:60+"px",width:"64vw",fontWeight:"bolder",fontSize:25+"px",backgroundColor:"#8F4FBE",border:"0px",zIndex:+200000,position:"relative"}} class="btn btn-success " id=''> Submit</button> }
+  {loading && window.innerWidth>1100 && <button type="submit "  style={{height:60+"px",width:"64vw",fontWeight:"bolder",fontSize:25+"px",backgroundColor:"#8F4FBE",border:"0px",zIndex:+20000,position:"relative"}} class="btn btn-success " id='' disabled>Sending...</button> }
+  
+
+  {!loading&& window.innerWidth<=1100 && <button type="submit "  style={{height:60+"px",width:"100%",fontWeight:"bolder",fontSize:25+"px",backgroundColor:"#8F4FBE",border:"0px",zIndex:+1000,position:"relative",pointer:"cursor"}} class="btn btn-success " id=''> Submit</button> }
+  {loading&& window.innerWidth<=1100 && <button type="submit "  style={{height:60+"px",width:"100%",fontWeight:"bolder",fontSize:25+"px",backgroundColor:"#8F4FBE",border:"0px",zIndex:+1000,position:"relative"}} class="btn btn-success " id='' disabled> Sending ...</button> }
+
+
 </form>
         
         
    
           </div>   
-        <div  className="feedleft"style={{backgroundColor:"",height:75+"vh",marginTop:0+"px"}}>
+        <div  className="feedleft"style={{backgroundColor:"",height:75+"vh",marginTop:0+"px",width:"50%",alignItems:"center"}}>
           
-          <div style={{border:"0px solid black",display:"flex",flexDirection:"column",alignItems:"center",marginTop:"0px"}}>
-
-            <div style={{marginLeft:-30+"px",marginTop:20+"px"}}>
-                <h4 style={{marginTop:20+"px",marginBottom:12+"px",fontFamily:"sans-serif",marginLeft:"30px",fontWeight:"bold",color:""}} className='feedtext'>How Satisfied You are with us ?</h4>
-            <div style={{color:"",marginLeft:30+"px"}}>
-            <h5 className='mb-5 mt-5 feedtext'>0 - not at all satisfied</h5>
-            <h5 className='mb-5 feedtext'>1 - not very satisfied</h5>
-            <h5 className='mb-5 feedtext'>10 - very satisfied</h5>
-            </div>
-            </div>
-           
-            
-          </div>
-          <img src="../undraw_reviews_lp8w.png" style={{height:200+"px",width:"auto"}} alt="" />
+        
+          <img src="../BBCrm (8) (2).png" style={{height:"auto",width:"160%",marginLeft:"-150px",marginTop:"50px",zIndex:"",maxWidth:"900px"}} alt="" />
           </div>   
     </div>
 

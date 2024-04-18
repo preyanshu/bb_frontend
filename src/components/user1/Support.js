@@ -8,10 +8,14 @@ import "./notifications.css"
 import Sidebar_2 from "./Sidebar_2";
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
+import Notitoggle from '../Notitoggle';
+import { useTheme } from '../context/ThemeContext';
 
 const Support = (props) => {
+  const {isDarkTheme}=useTheme();
   const[flag,setflag]=useState(false);
   const {flag2,setflag2}=useContext(Flagcontext);
+  const [loading, setLoading] = useState(false);
   useEffect(()=>{
     if(window.innerWidth<1200){
       console.log("innerwidth",window.innerWidth);
@@ -40,14 +44,14 @@ console.log("lib",library);
     const elements = document.querySelectorAll(".dashboard");
 
     elements.forEach(function(element) {
-        element.style.backgroundColor = "#E73673";
+        element.style.backgroundColor = "#8F4FBE";
     });
   }
   else{
     const elements = document.querySelectorAll("."+library);
 
 elements.forEach(function(element) {
-    element.style.backgroundColor = "#E73673";
+    element.style.backgroundColor = "#8F4FBE";
 });
 
   }
@@ -96,7 +100,78 @@ elements.forEach(function(element) {
       }
   }
    
+  const onSubmit = async event => {
+    setLoading(true);
+    event.preventDefault();
+    console.log("credentials",credentials); 
+  
+    const { email, message } = credentials;
+    setCredentials({name: "", email: "",message:""});
+    
+     
+      // alert("Your message has been sent successfully")
+      // console.log(form.current);
+  
+      // emailjs
+      //   .sendForm('service_vlsqj1c', 'template_xd0uirn', form.current, {
+      //     publicKey: 'v5jg44syuVOknYpby',
+      //   })
+      //   .then(
+      //     () => {
+      //       console.log('SUCCESS!');
+      //       setComplete(true);
+      //     },
+      //     (error) => {
+      //       setSending(false);
+      //       setStatusError(error.text);
+      //       setComplete(true);
+      //       console.log('FAILED...', error.text);
+      //     },
+      //   );
 
+      
+
+        var data = {
+          service_id: 'service_vlsqj1c',
+          template_id: 'template_xd0uirn',
+          user_id: 'v5jg44syuVOknYpby',
+          template_params: {
+              'user_email':email,
+              'message':message
+          }
+      };
+
+      console.log("data",data);
+      
+      fetch('https://api.emailjs.com/api/v1.0/email/send', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+      })
+      .then(function(response) {
+        setLoading(false);
+          if (response.ok) {
+            alert("Your message has been sent successfully");
+            console.log('SUCCESS!');
+            
+          } else {
+          
+            alert("failed"+ response.statusText)
+            console.log('FAILED...', response.statusText)
+          }
+      })
+      .catch(function(error) {
+        setLoading(false);
+        alert("failed"+ error.message)
+        console.log('FAILED...', error.message);
+      });
+    
+
+  
+    
+  };
 
 
   return (<>
@@ -152,69 +227,62 @@ elements.forEach(function(element) {
    
    
     </div>}
-    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s"}}>     
+    <div className="notificationbg" style={{width:desiredWidth2,transition:"0.3s",backgroundColor:isDarkTheme?"#181822":"#E6EDFA",color:isDarkTheme?"white":"black"}}>     
       
 
     
 
     <div className="notifications"style={{width:desiredWidth3,transition:"0.3s"}}>
-   <div className="text-left pt-3 pl-5  pe-5" style={{paddingLeft:54+"px",paddingBottom:-10+"px",display:"flex",justifyContent:"space-between",border:"0px solid black",width:78+"vw",position:"absolute",top:10+"px",zIndex:1000000}}><div>{location.pathname}<br></br><h5>Dashboard</h5></div><div className='sidetextbar'><i style={{marginRight:20+"px"}} class="fa-solid fa-bell fa-sm "></i><i style={{marginRight:20+"px"}} class="fa-solid fa-bullhorn fa-sm "></i><i
-style={{marginRight:8+"px"}} class="fa-solid fa-gear fa-sm "></i><i  style={{marginRight:11+"px",color:"red"}}class="fa-solid fa-user fa-sm "></i><span 
-style={{cursor:"pointer",color:"red"}}
-onClick={()=>{
-  
-  navigate("/");
-  localStorage.removeItem("token")
-  localStorage.removeItem("token2")
-  props.showAlert("logged out successfully","danger")
- 
-  
+  <Notitoggle
+  >
+    
+  </Notitoggle>
 
-}}
->Logout</span></div></div>
-
-<div className="a shadow " style={{height:80+"vh",width:76+"vw",backgroundColor:"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",display:"flex",justifyContent:"space-evenly"}}>
+<div className="a" style={{height:80+"vh",width:76+"vw",backgroundColor:isDarkTheme?"#181822":"white",borderRadius:13+"px",border:"0px solid black",padding:25+"px",marginTop:30+"px",display:"flex",justifyContent:"space-evenly",alignItems:"center"}}>
 
         {/* <h2 style={{marginTop:15+"px",marginBottom:12+"px",fontFamily:"sans-serif"}}><b>Get in Touch</b></h2>
         <span className='subtxt mb-5' style={{marginLeft:"5px",color:"darkgray",fontSize:"20px",marginBottom:"20px"}}>WE are here for You! How can we Help?</span> */}
         {/* <i class="fa-solid fa-check fa-lg" style={{color: "#2dbe45"}}></i> <b>Lorem </b> ipsum dolor <br /> <br /> */}
-        <div  className="feedform"style={{backgroundColor:"",height:75+"vh",marginTop:0+"px"}}>
+        <div  className="feedform"style={{backgroundColor:"",marginTop:0+"px",zIndex:"+10"}}>
             <h2  className="mt-5" style={{marginTop:15+"px",marginBottom:12+"px",fontFamily:"sans-serif",marginLeft:"30px",fontWeight:"bold",color:""}}><b>Get in Touch</b></h2>
         <span className='subtxt mb-5 my-3' style={{marginLeft:"35px",color:"darkgrey",fontSize:"20px",marginBottom:"40px",fontWeight:"bold"}}>WE are here for You! How can we Help?</span>
 
-        <form style={{width:80+"%",minWidth:300+"px",marginTop:20+"px"}} onSubmit={handleSubmit}>
+        <form style={{width:80+"%",minWidth:300+"px",marginTop:20+"px"}} onSubmit={onSubmit}>
         <div class="form-floating mb-3">
-  <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" style={{backgroundColor:""}} name='name' onChange={onChange} required/>
+  <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" style={{backgroundColor:""}} name='name' onChange={onChange}  value={credentials.name} required/>
   <label for="floatingInput feedtext">Enter your Name</label>
 </div>
 <div class="form-floating mb-3">
-  <input type="email" class="form-control" id="floatingPassword" placeholder="Password" style={{backgroundColor:""}} name='email' onChange={onChange} required/>
+  <input type="email" class="form-control" id="floatingPassword" placeholder="Password" style={{backgroundColor:""}} name='email' onChange={onChange} value={credentials.email} required/>
   <label for="floatingPassword feedtext">Enter your email address</label>
 </div>
   <div class="mb-5">
   <div class="form-floating">
-  <input class="form-control" placeholder="Go ahead, We are listening" id="floatingTextarea2" style={{height: "100px",backgroundColor:""}} name='message' onChange={onChange} required min={5}></input>
+  <input class="form-control" placeholder="Go ahead, We are listening" id="floatingTextarea2" style={{height: "100px",backgroundColor:""}} name='message' onChange={onChange} required min={5} value={credentials.message}></input>
   <label  for="floatingTextarea2"> <span  className="feedtext" style={{backgroundColor:"",margin:"0px",padding:"0px"}}>Go ahead, We are listening</span></label>
 </div>
   </div>
-
+ {!loading&& <>
   <button type="submit"  style={{height:60+"px",width:"100%",fontWeight:"bolder",fontSize:25+"px"}} class="btn btn-success " id='btnform'> Submit</button>
+
+ 
+ </>}
+ {loading&& <>
+  <button type="submit"  style={{height:60+"px",width:"100%",fontWeight:"bolder",fontSize:25+"px"}} class="btn btn-success " id='btnform' disabled> Sending ..</button>
+
+ 
+ </>}
+  
 </form>
         
         
    
           </div>   
-        <div  className="feedleft" style={{backgroundColor:"",height:75+"vh",marginTop:0+"px",width:40+"%"}}>
-          <img src="../undraw_Post_re_mtr4.png" style={{height:250+"px",width:"auto"}} alt="" />
-          <div style={{border:"0px solid black",display:"flex",flexDirection:"column",alignItems:"center",marginTop:"0px"}}>
-            <div>
-            <h4 className='my-5 feedtext'><i class="fa-brands fa-facebook fa-2xl me-3 my-3"></i>@bytebridge</h4>
-            <h4 className='my-5 feedtext'><i class="fa-brands fa-instagram fa-2xl me-3 my-3"></i>@bytebridge</h4>
-            <h4 className='my-5 feedtext'><i class="fa-brands fa-twitter fa-2xl me-3 my-3"></i>@bytebridge</h4>
-            </div>
-           
-            
-          </div>
+        <div  className="feedleft" style={{backgroundColor:"",marginTop:0+"px",width:50+"%"}}>
+          {window.innerWidth<1100 && <img src="../BBCrm (7) (1).png" style={{width:"100%",height:"auto"}} alt="" />}
+          {window.innerWidth>=1100 && <img src="../BBCrm (7) (1).png" style={{width:"160%",height:"auto",marginLeft:"-120px"}} alt="" />}
+          {/* <img src="../BBCrm (7) (1).png" style={{width:"100%",height:"auto"}} alt="" /> */}
+          
           </div>   
     </div>
 
