@@ -247,7 +247,7 @@ if (text.includes("user1") || text.includes("user3")) {
 
     }
         
-      }, 6000); // Check every 60 seconds
+      }, 3000); // Check every 60 seconds
   
       return () => clearInterval(interval); // Cleanup the interval on component unmount
     }
