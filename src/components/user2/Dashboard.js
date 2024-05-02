@@ -56,7 +56,7 @@ const Dashboard = (props) => {
 
 //data fetching functions
 async function fetchDataForBarChart() {
-  const url = 'http://localhost:5000/chart/user2/bar';
+  const url = 'https://classroombackend-0a5q.onrender.com/chart/user2/bar';
   const requestBody = {
       teacherEmail: JSON.parse(localStorage.getItem("token")).email
   };
@@ -87,7 +87,7 @@ async function fetchDataForBarChart() {
 }
 
 async function fetchDataForLineChart() {
-  const url = 'http://localhost:5000/chart/user2/line';
+  const url = 'https://classroombackend-0a5q.onrender.com/chart/user2/line';
   const requestBody = {
       teacherEmail: JSON.parse(localStorage.getItem("token")).email
   };
@@ -118,7 +118,7 @@ async function fetchDataForLineChart() {
 }
 
 async function fetchDataForDoughnutChart() {
-  const url = 'http://localhost:5000/chart/user2/doughnut';
+  const url = 'https://classroombackend-0a5q.onrender.com/chart/user2/doughnut';
   const requestBody = {
       teacherEmail: JSON.parse(localStorage.getItem("token")).email
   };
