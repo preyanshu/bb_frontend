@@ -447,7 +447,7 @@ const {dark,setdark}=useContext(Flagcontext);
   <span to="/user2" className="my-3" style={{color:"white",textDecoration:"none"}} ></span>
 </h5>
 
-<h5 class='activities' style={{width:"fit-content", paddingLeft:"8px", marginLeft:"8px"}} onClick={() => navigate("/user2/activites")}>
+<h5 class='activities' style={{width:"fit-content", paddingLeft:"8px", marginLeft:"8px"}} onClick={() => navigate("/user2/activities")}>
   <i class="fa-solid fa-chart-line fa-lg me-3" style={{marginLeft:10+"%",marginTop:25+"px",marginBottom:25+"px"}}></i>
   <span to="/user2" className="my-3" style={{color:"white",textDecoration:"none"}} ></span>
 </h5>
