@@ -22,13 +22,19 @@ export const ThemeProvider = ({ children }) => {
 // },[Wtext])
 // console.log("window",window.location.href)
 // let teacher =0;
-const text = window.location.href;
+const [teacher,setTeacher]=useState(0);
+
+useEffect(()=>{
+  const text = window.location.href;
 //  setText(text);
 if (text.includes("user1") || text.includes("user3")) {
-  var teacher = 0;
+ setTeacher(0);
 } else {
-  var teacher = 1;
+  setTeacher(1);
 }
+
+},[])
+
 
 
   
@@ -43,7 +49,7 @@ if (text.includes("user1") || text.includes("user3")) {
   const [flag,setFlag]=useState(false);
   const[loading_ano,setloading_ano]=useState(false);
   const[loading_noti,setloading_noti]=useState(false);
-  const[assignmentsLength,setAssignmentsLength]=useState(0);
+  const[assignmentsLength,setAssignmentsLength]=useState();
 
  
 
