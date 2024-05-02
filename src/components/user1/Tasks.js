@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
 import Notitoggle from '../Notitoggle';
 import { useTheme } from '../context/ThemeContext';
+import { toast } from 'react-toastify';
 
 const Tasks = (props) => {
   const {isDarkTheme}=useTheme();
@@ -126,7 +127,8 @@ elements.forEach(function(element) {
 <span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
  Sender's Name</span>  <span  className='createdsec' > <b>12 Oct. 2023</b></span>  
 <div className="btn btn-success cambtn" onClick={()=>{
-alert("currently in development")
+// alert("currently in development")
+toast.error("currently in development")
 }}>Open</div>
 
 </div>
@@ -135,7 +137,8 @@ alert("currently in development")
 <span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
  Sender's Name</span>  <span className='createdsec' > <b>12 jan. 2024</b></span>  
  <div className="btn btn-success cambtn" onClick={()=>{
-alert("currently in development")
+// alert("currently in development")
+toast.error("currently in development")
 }}>Open</div>
 
 </div>
@@ -144,7 +147,9 @@ alert("currently in development")
 <span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
  Sender's Name</span>  <span className='createdsec' > <b>11 Oct. 2024</b></span>  
  <div className="btn btn-success cambtn" onClick={()=>{
-alert("currently in development")
+// alert("currently in development")
+toast.error("currently in development")
+
 }}>Open</div>
 
 </div>
@@ -167,7 +172,8 @@ alert("currently in development")
 <span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
  Sender's Name</span>  <span  className='createdsec' > <b>12 Oct. 2023</b></span>  
 <div className="btn btn-success cambtn" onClick={()=>{
-alert("currently in development")
+
+toast.error("currently in development")
 }}>Open</div>
 
 </div>
@@ -176,7 +182,8 @@ alert("currently in development")
 <span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
  Sender's Name</span>  <span className='createdsec' > <b>12 jan. 2024</b></span>  
  <div className="btn btn-success cambtn" onClick={()=>{
-alert("currently in development")
+
+toast.error("currently in development")
 }}>Open</div>
 
 </div>
@@ -185,7 +192,8 @@ alert("currently in development")
 <span ><i class="fa-solid fa-bars-progress fa-lg me-3"></i>Task Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
  Sender's Name</span>  <span className='createdsec' > <b>11 Oct. 2024</b></span>  
  <div className="btn btn-success cambtn" onClick={()=>{
-alert("currently in development")
+
+toast.error("currently in development")
 }}>Open</div>
 
 </div>

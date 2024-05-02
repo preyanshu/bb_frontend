@@ -18,6 +18,8 @@ const Dashboard = (props) => {
   const {isDarkTheme,assignmentsLength}=useTheme();
   const [barData, setChartData] = useState([]);
   const [classData, setClassData] = useState({});
+  const [lineData,setLineData]=useState([]);
+  const [marksData,setMarksData]=useState([]);
 
 
   let teachers = parseInt(classData.totalTeachers)
@@ -35,7 +37,7 @@ const Dashboard = (props) => {
 
 
   async function fetchDataForDoughnutChart() {
-    const url = 'http://localhost:5000/chart/user1/doughnut';
+    const url = 'https://classroombackend-0a5q.onrender.com/chart/user1/doughnut';
     const requestBody = {
         studentEmail: JSON.parse(localStorage.getItem("token")).email
     };
@@ -66,7 +68,7 @@ const Dashboard = (props) => {
   }
 
   const fetchChartDataForline2 = async (email) => {
-    const url = 'http://localhost:5000/chart/user1/line2';
+    const url = 'https://classroombackend-0a5q.onrender.com/chart/user1/line2';
     const requestBody = {
         studentEmail: JSON.parse(localStorage.getItem("token")).email
     };
@@ -92,13 +94,48 @@ const Dashboard = (props) => {
     }
   };
 
+  const fetchAttendanceData = async () => {
+    try {
+      const response = await fetch(`https://classroombackend-0a5q.onrender.com/spreadsheet/fetch-attendance/${JSON.parse(localStorage.getItem("token")).email}`);
+      if (!response.ok) {
+        console.log(`Failed to fetch data: ${response.statusText}`);
+      }
+      const data = await response.json();
+      console.log("datafsfjhgfd",data)
+      setLineData(data); // Return the fetched data
+    } catch (error) {
+      console.error('Error fetching attendance data:', error);
+      // throw error; // Propagate the error to the caller
+    }
+  };
+
+  const fetchMarksData = async () => {
+    try {
+      const response = await fetch(`https://classroombackend-0a5q.onrender.com/spreadsheet/fetch-marks/${JSON.parse(localStorage.getItem("token")).email}`);
+      if (!response.ok) {
+        console.log(`Failed to fetch data: ${response.statusText}`);
+      }
+      const data = await response.json();
+      console.log("marks",data)
+      setMarksData(data); // Return the fetched data
+    } catch (error) {
+      console.error('Error fetching attendance data:', error);
+      // throw error; // Propagate the error to the caller
+    }
+  };
+
+
   useEffect(() => {
     const fetchData = async () => {
      
         try {
             await Promise.all([
                 fetchChartDataForline2(),
-                fetchDataForDoughnutChart()
+                fetchDataForDoughnutChart(),
+                fetchAttendanceData(),
+                fetchMarksData()
+
+
 
             ]);
         } catch (error) {
@@ -268,11 +305,11 @@ return(
 height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",paddingTop:"30px",paddingBottom:"30px",marginBottom:"20px"}}>
         
        
-   <Graph type="line"></Graph>
+   <Graph type="line" lineData={lineData}></Graph>
   
 
-   <div style={{marginLeft:2+"vw"}}><h6><b>Semester wise CGPA</b></h6>
-   <b>(+15%)</b> increase from last semester</div>
+   <div style={{marginLeft:2+"vw"}}><h6><b>Subject wise attendance</b></h6>
+   </div>
    <hr />
    <div style={{marginLeft:2+"vw"}}>
    <i class="fa-regular fa-clock me-3"></i>
@@ -303,11 +340,11 @@ height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white
         <div className="a shadow" style={window.innerWidth>1200?{height:"fit-content",width:24+"vw",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",paddingTop:"30px",paddingBottom:"30px"}:{
 
 height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",paddingTop:"30px",paddingBottom:"30px",marginBottom:"20px"}}> 
-        <Graph backgroundColor="#303433" type="line"  ></Graph>
+        <Graph backgroundColor="#303433" type="line" lineData={marksData} ></Graph>
   
 
-   <div style={{marginLeft:2+"vw"}}><h6><b>Avg. Task Completion </b></h6>
-   <b>(+15%)</b> increase</div>
+   <div style={{marginLeft:2+"vw"}}><h6><b>Subject wise marks</b></h6>
+   </div>
    <hr />
    <div style={{marginLeft:2+"vw"}}>
    <i class="fa-regular fa-clock me-3"></i>

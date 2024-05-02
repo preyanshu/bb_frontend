@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 
@@ -27,9 +28,9 @@ const Login = (props) => {
         let url = '';
 
         if (type === "2"||type==="3") {
-          url = 'http://localhost:5000/auth/loginTeacher';
+          url = 'https://classroombackend-0a5q.onrender.com/auth/loginTeacher';
         } else if (type === "1") {
-          url = 'http://localhost:5000/auth/loginStudent';
+          url = 'https://classroombackend-0a5q.onrender.com/auth/loginStudent';
         }
         const data = {
           email: email,
@@ -54,7 +55,8 @@ const Login = (props) => {
              localStorage.setItem("token", JSON.stringify(json.logindata));
              localStorage.setItem("token2", JSON.stringify(json.token));
             console.log(json);
-            alert("Login Successful");
+            // alert("Login Successful");
+            toast.success("Login Successful");
             if(type==="1"){
               navigate('/user1');
             }
@@ -67,10 +69,13 @@ const Login = (props) => {
 
           }
           else if(json.error){
-            alert(json.error);
+            // alert(json.error);
+            toast.error(json.error);
           }
+
           else{
-            alert("Something went wrong");
+            // alert("Something went wrong");
+            toast.error("Something went wrong");
           }
 
           setLoading(false);
@@ -78,7 +83,8 @@ const Login = (props) => {
        
           
         } catch (error) {
-          alert("Internal Server Error");
+          // alert("Internal Server Error");
+          toast.error("Internal Server Error");
           setLoading(false);
         }
       };

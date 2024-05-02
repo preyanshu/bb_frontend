@@ -11,6 +11,7 @@ import Flagcontext from '../context/notes/Flagcontext';
 import Tabs from './Tabs';
 import { useTheme } from '../context/ThemeContext';
 import Notitoggle from '../Notitoggle';
+import { toast } from 'react-toastify';
 
 const Notifications = (props) => {
   const[flag,setflag]=useState(false);
@@ -135,7 +136,8 @@ elements.forEach(function(element) {
         const data = await response.json();
     
         if (data.error) {
-            alert("internal server error");
+            //alert("internal server error"); 
+            toast.error("internal server error");
         }
         else{
           

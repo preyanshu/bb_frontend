@@ -7,6 +7,7 @@ import Flagcontext from '../context/notes/Flagcontext';
 import Notitoggle from '../Notitoggle';
 // import { useTheme } from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
+import { toast } from 'react-toastify';
 
 const Library = (props) => {
     const[flag,setflag]=useState(false);
@@ -117,10 +118,12 @@ const Library = (props) => {
         const data = await response.json();
         if(data.book){
           setResponse(data);
-          alert("Book Borrowed successfully")
+         
+          toast.success("Book Borrowed successfully");
         }
         else{
-          alert(data.error)
+        
+          toast.error(data.error);
         }
         
       } catch (error) {

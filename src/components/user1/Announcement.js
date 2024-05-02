@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
 import Notitoggle from '../Notitoggle';
 import { useTheme } from '../context/ThemeContext';
+import { toast } from 'react-toastify';
 
 const Announcement = (props) => {
   let teacher=false;
@@ -136,7 +137,8 @@ const fetchannouncement = async (e) => {
     const announce = await response.json();
 
     if (announce.error) {
-        alert("internal server error");
+      
+        toast.error("internal server error");
     }
     else{
       

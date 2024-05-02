@@ -11,14 +11,15 @@ var j =0;
 export const ThemeProvider = ({ children }) => {
   const [Wtext, setText] = useState('');
 
-useEffect(()=>{
+// useEffect(()=>{
   
  
-  const text = window.location.href;
-   setText(text);
+//   const text = window.location.href;
+//    setText(text);
+//   //  console.log(Wtext);
 
 
-},[])
+// },[Wtext])
 // console.log("window",window.location.href)
 // let teacher =0;
 const text = window.location.href;
@@ -42,7 +43,7 @@ if (text.includes("user1") || text.includes("user3")) {
   const [flag,setFlag]=useState(false);
   const[loading_ano,setloading_ano]=useState(false);
   const[loading_noti,setloading_noti]=useState(false);
-  const[assignmentsLength,setAssignmentsLength]=useState(-1);
+  const[assignmentsLength,setAssignmentsLength]=useState(0);
 
  
 
@@ -68,7 +69,7 @@ if (text.includes("user1") || text.includes("user3")) {
         // You can include a 'body' field here for POST requests if sending data
       };
 
-      const url = (teacher) ? `http://localhost:5000/teacher/viewAssignments/${e.emailid}` : `http://localhost:5000/student/viewAssignments/${e.emailid}`;
+      const url = (teacher) ? `https://classroombackend-0a5q.onrender.com/teacher/viewAssignments/${e.emailid}` : `https://classroombackend-0a5q.onrender.com/student/viewAssignments/${e.emailid}`;
   
       const response = await fetch(url, requestOptions);
       const data = await response.json();
@@ -76,7 +77,7 @@ if (text.includes("user1") || text.includes("user3")) {
   
   
       if (data.error) {
-          alert("internal server error");
+          console.log(data.error)
       }
       else{
         
@@ -115,7 +116,7 @@ if (text.includes("user1") || text.includes("user3")) {
             body: JSON.stringify(requestBody) // Add the request body here
         };
 
-        const url = (teacher) ? `http://localhost:5000/teacher/viewAnnouncementsallteacher` : `http://localhost:5000/student/viewAnnouncementsall`;
+        const url = (teacher) ? `https://classroombackend-0a5q.onrender.com/teacher/viewAnnouncementsallteacher` : `https://classroombackend-0a5q.onrender.com/student/viewAnnouncementsall`;
 
         const response = await fetch(url, requestOptions);
 
@@ -125,7 +126,7 @@ if (text.includes("user1") || text.includes("user3")) {
         console.log("announce", announce);
 
         if (announce.error) {
-            alert("Internal server error");
+            // alert("Internal server error");
         } else {
             // console.log("datannounce", announce);
             return announce;
@@ -144,8 +145,9 @@ if (text.includes("user1") || text.includes("user3")) {
   useEffect(()=>{
     let a=[];
     let b=[];
+    console.log("useeffect");
 
-    if(JSON.parse(localStorage.getItem('token')) && localStorage.getItem('token2') && (Wtext.includes("user1")||Wtext.includes("user2")||(Wtext.includes("user3")))){
+    if(JSON.parse(localStorage.getItem('token')) && localStorage.getItem('token2') ){
       async function fetchData() {
         setloading_ano(true);
         setloading_noti(true);
@@ -178,7 +180,8 @@ if (text.includes("user1") || text.includes("user3")) {
   },[])
 
   const checkForUpdates = async (gAnnouncements,gNotifications) => {
-    let newNotifications=[];
+    try{
+      let newNotifications=[];
     newNotifications = await fetchassignment({emailid:JSON.parse(localStorage.getItem('token')).email,token:JSON.parse(localStorage.getItem('token2'))});
     let newAnnouncements=[];
     newAnnouncements = await fetchannouncement({emailid:JSON.parse(localStorage.getItem('token')).email},JSON.parse(localStorage.getItem('token2')));
@@ -194,6 +197,7 @@ if (text.includes("user1") || text.includes("user3")) {
       
      
       // console.log("updated notifications");
+      setAssignmentsLength(newNotifications.length);
 
       console.log(newNotifications.length);
       console.log(gNotifications.length+j);
@@ -212,6 +216,12 @@ if (text.includes("user1") || text.includes("user3")) {
       setUpdate(true);
       
     }
+    }
+    catch(error){
+      console.error('There was a problem with the fetch operation:', error);
+      // Handle error as needed
+      return [];
+    }
   };
 
   const toggleTheme = () => {
@@ -226,7 +236,7 @@ if (text.includes("user1") || text.includes("user3")) {
         
         var a = gAnnouncements;
     var b= gNotifications;
-    if((localStorage.getItem('token') && localStorage.getItem('token2'))&& (Wtext.includes("user1")||Wtext.includes("user2")||(Wtext.includes("user3")))){
+    if((localStorage.getItem('token') && localStorage.getItem('token2'))){
       checkForUpdates(a,b);
 
     }

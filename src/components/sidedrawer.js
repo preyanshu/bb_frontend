@@ -119,7 +119,7 @@ export const Sidedrawer = () => {
   
         const {data} = await axios.post("https://chatapp-backend-tm8i.onrender.com/api/chat", { userId }, config);
          setSelectedChat(data[0]);
-         console.log("chat ghhh jjjjjjjjj bbbbbbbbbn555data");
+
          console.log(data);
       
   

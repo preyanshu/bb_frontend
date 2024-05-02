@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
 import Notitoggle from '../Notitoggle';
 import { useTheme } from '../context/ThemeContext';
+import { toast } from 'react-toastify';
 
 const Student_attendence = (props) => {
     const{isDarkTheme}=useTheme();
@@ -63,6 +64,7 @@ const Student_attendence = (props) => {
       assignments: [],
       students: [],
       announcements: [],
+      spreadsheetLink:""
       
     });
     const [current,setcurrent]=useState({
@@ -152,7 +154,8 @@ const Student_attendence = (props) => {
             const response = await fetch(url, options);
     
             if (!response.ok) {
-              alert('Failed to link spreadsheet');
+          
+              toast.error('Failed to link spreadsheet');
                 throw new Error(`HTTP error! Status: ${response.status}`);
                
             }
@@ -163,7 +166,8 @@ const Student_attendence = (props) => {
             
         } catch (error) {
             console.error('Error fetching data:', error);
-            alert('Failed to link spreadsheet');
+            
+            toast.error('Failed to link spreadsheet');
             // Handle error as needed
             throw error; // Rethrow the error for the caller to handle
         }
@@ -179,7 +183,8 @@ const Student_attendence = (props) => {
             semester: class1.semester,
             section: class1.section,
             subject: class1.subject,
-            subjectCode: class1.subjectCode
+            subjectCode: class1.subjectCode,
+            spreadsheetLink:class1.spreadsheetLink
           };
       
           // const queryParams = new URLSearchParams(requestBody).toString();
@@ -194,7 +199,7 @@ const Student_attendence = (props) => {
             body: JSON.stringify(requestBody)
           };
       
-          const response = await fetch("https://classroom-backend-uow6.onrender.com/teacher/createClass", requestOptions);
+          const response = await fetch("http://localhost:5000/teacher/createClass", requestOptions);
           console.log("done");
       
           if (!response.ok) {
@@ -204,9 +209,6 @@ const Student_attendence = (props) => {
           const data = await response.json();
           console.log("data",data);
 
-          await linkSheet(data._id);
-
-          alert("sheet linked successfully");
 
           
           console.log(data);
@@ -216,6 +218,8 @@ const Student_attendence = (props) => {
           // Further logic with the data
         } catch (error) {
           console.error('There was a problem with the fetch operation:', error);
+          
+          toast.error('There was a problem with the fetch operation:', error);
           // Handle error as needed
         }
       };
@@ -283,6 +287,7 @@ const Student_attendence = (props) => {
           assignments: [],
           students: [],
           announcements: [],
+          spreadsheetLink:""
           
         })
         
@@ -385,7 +390,7 @@ const Student_attendence = (props) => {
           }
         };
     
-        const response = await fetch(`https://classroom-backend-uow6.onrender.com/teacher/viewClasses?name=${token.name}`, requestOptions);
+        const response = await fetch(`http://localhost:5000/teacher/viewClasses?name=${token.name}`, requestOptions);
     
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -424,17 +429,18 @@ const Student_attendence = (props) => {
           headers: {
             'Content-Type': 'application/json',
             // 'Content_Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token")).authtoken}`,
           
           }
           // You can include a 'body' field here for POST requests if sending data
         };
     
-        const response = await fetch('https://classroom-backend-uow6.onrender.com/teacher/searchStudents', requestOptions);
+        const response = await fetch('http://localhost:5000/teacher/searchStudents', requestOptions);
         const data = await response.json();
     
         if (data.error) {
-            alert("internal server error");
+            
+            toast.error("internal server error");
         }
         else{
           
@@ -463,17 +469,18 @@ const Student_attendence = (props) => {
           headers: {
             'Content-Type': 'application/json',
             // 'Content_Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${token_new}`,
           
           }
           // You can include a 'body' field here for POST requests if sending data
         };
     
-        const response = await fetch(`https://classroom-backend-uow6.onrender.com/teacher/viewAssignments/${e._id}`, requestOptions);
+        const response = await fetch(`http://localhost:5000/teacher/viewAssignmentspecific/${e._id}`, requestOptions);
         const data = await response.json();
     
         if (data.error) {
-            alert("internal server error");
+          
+            toast.error("internal server error");
         }
         else{
           
@@ -501,17 +508,18 @@ const Student_attendence = (props) => {
           headers: {
             'Content-Type': 'application/json',
             // 'Content_Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${token_new}`,
           
           }
           // You can include a 'body' field here for POST requests if sending data
         };
     
-        const response = await fetch(`https://classroom-backend-uow6.onrender.com/teacher/viewAnnouncements/${e._id}`, requestOptions);
+        const response = await fetch(`http://localhost:5000/teacher/viewAnnouncements/${e._id}`, requestOptions);
         const data = await response.json();
     
         if (data.error) {
-            alert("internal server error");
+          
+            toast.error("internal server error");
         }
         else{
           
@@ -559,13 +567,14 @@ const addassignment = async () => {
       body: JSON.stringify( {classId:current._id,title:modal1.title,dueDate:modal1.dueDate,description:modal1.description})
       // You can include a 'body' field here for POST requests if sending data
     };
-    const url = "https://classroom-backend-uow6.onrender.com/teacher/addAssignment";  
+    const url = "http://localhost:5000/teacher/addAssignment";  
 
     const response = await fetch(url, requestOptions);
     const result = await response.json();
 
     if (result.error) {
-        alert("internal server error");
+        
+        toast.error("internal server error");
     }
     else{
       
@@ -633,13 +642,14 @@ const addannouncement = async () => {
       body: JSON.stringify( {classId:current._id,title:modal2.title,content:modal2.description})
       // You can include a 'body' field here for POST requests if sending data
     };
-    const url = "https://classroom-backend-uow6.onrender.com/teacher/addAnnouncement";  
+    const url = "http://localhost:5000/teacher/addAnnouncement";  
 
     const response = await fetch(url, requestOptions);
     const result = await response.json();
 
     if (result.error) {
-        alert("internal server error");
+        // alert("internal server error");
+        toast.error("internal server error");
     }
     else{
       
@@ -792,7 +802,8 @@ function removeStudentFromObject(obj, studentIdToRemove) {
                   
                   {!current.spreadsheetLink && <>
                     <i class="fa-solid fa-clipboard-user fa-lg " style={{color:"#1BAAAB"}} onClick={()=>{
-                      alert("No Sheet Linked");
+                
+                      toast.error("No Sheet Linked");
                     }}></i>
                   </>}
 
@@ -1094,6 +1105,10 @@ removeStudentFromClass(classId, studentId,JSON.parse(localStorage.getItem("token
   <div class="mb-3">
     <label for="exampleInputPassword1" class="form-label">Section</label>
     <input type="text" class="form-control" id="exampleInputPassword1" name='section' onChange={onChange} value={class1.section}/>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Create google sheet and  give access to "bytebridge@chrome-setup-392911.iam.gserviceaccount.com"</label>
+    <input type="url" class="form-control" id="exampleInputPassword1" name='spreadsheetLink' onChange={onChange} value={class1.spreadsheetLink}/>
   </div>
   
   <button type="submit" class="btn btn-success w-100">ADD</button>

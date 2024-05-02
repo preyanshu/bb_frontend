@@ -12,6 +12,7 @@ import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
 import Notitoggle from '../Notitoggle';
 import { useTheme } from '../context/ThemeContext';
+import { toast } from 'react-toastify';
 
 const Networks = (props) => {
   const location=useLocation();
@@ -175,7 +176,9 @@ elements.forEach(function(element) {
         
     
         } catch (error) {
-          alert(error);
+          
+          toast.error(error.message);
+
         }
       }
       
@@ -284,7 +287,8 @@ elements.forEach(function(element) {
         {/* <span >  <i class="fa-brands fa-linkedin fa-lg me-3"></i>
         Linkedin  </span> */}
          <div className="btn btn-primary" onClick={()=>{
-          alert("functionality not added yet")
+        
+          toast.error("functionality not added yet")
     // ref.current.click();
 }} style={{backgroundColor:"#10ADAC",border:"0px",color:"black"}}>Connect</div>
 

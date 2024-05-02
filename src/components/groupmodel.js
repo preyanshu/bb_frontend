@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useChatContext } from './context/chatcontext';
+import { toast } from 'react-toastify';
 
 export const Groupmodel = () => {
 
@@ -16,7 +17,8 @@ export const Groupmodel = () => {
     const createGroup = async () => {
 
       if(!grpName || !userToAdd){
-        alert("fill all fields")
+        // alert("fill all fields")
+        toast.error("fill all fields");
           return 0;
       }
         try {

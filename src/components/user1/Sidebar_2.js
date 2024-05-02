@@ -6,6 +6,7 @@ import "./h5.css";
 import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
 import ToggleBtn from './ToggleBtn';
+import { toast } from 'react-toastify';
 
 const Sidebar_2 = (props) => {
    const {flag}=props;
@@ -40,7 +41,7 @@ const {dark,setdark}=useContext(Flagcontext);
  } 
  {flag &&<>
   <lottie-player src="https://lottie.host/e1099103-9082-458f-9820-90f8929e924c/Ujk9LgevjJ.json" background="" speed="1" style={{height:50+"px",width:50+"px",marginLeft:22+"px",display:"inline-block"}} loop autoplay direction="1" mode="normal"></lottie-player>
- <h5 class="offcanvas-title ml-3 " id="nothover" style={{width:"fit-content"}}>{token2}</h5> </>
+ <h5 class="offcanvas-title ml-3 " id="nothover" style={{width:"fit-content"}}>{token2.split(' ')[0].substring(0,10)}</h5> </>
  
 
  } 
@@ -133,7 +134,8 @@ const {dark,setdark}=useContext(Flagcontext);
    localStorage.removeItem("token2")
 
    setTimeout(() => {
-    alert("logged out successfully");
+    // alert("logged out successfully");
+    toast.success("logged out successfully");
     navigate("/login")
    }, 600);
 
@@ -240,7 +242,9 @@ const {dark,setdark}=useContext(Flagcontext);
    localStorage.removeItem("token2")
 
    setTimeout(() => {
-    alert("logged out successfully");
+    // alert("logged out successfully")
+
+    toast.success("logged out successfully");
     navigate("/login")
    }, 600);}}>
         <i className="fa-solid fa-right-from-bracket me-3" style={{ marginLeft: 10 + "%", marginTop: 25 + "px", marginBottom: 25 + "px" }}></i>
@@ -387,7 +391,8 @@ const {dark,setdark}=useContext(Flagcontext);
    localStorage.removeItem("token2")
 
    setTimeout(() => {
-    alert("logged out successfully");
+    // alert("logged out successfully");
+    toast.success("logged out successfully");
     navigate("/login")
    }, 600);
 
@@ -483,7 +488,8 @@ const {dark,setdark}=useContext(Flagcontext);
    localStorage.removeItem("token2")
 
    setTimeout(() => {
-    alert("logged out successfully");
+    // alert("logged out successfully");
+    toast.success("logged out successfully");
     navigate("/login")
    }, 600);}}>
         <i className="fa-solid fa-right-from-bracket me-3" style={{ marginLeft: 10 + "%", marginTop: 25 + "px", marginBottom: 25 + "px" }}></i>
@@ -632,7 +638,8 @@ const {dark,setdark}=useContext(Flagcontext);
    localStorage.removeItem("token2")
 
    setTimeout(() => {
-    alert("logged out successfully");
+    // alert("logged out successfully");
+    toast.success("logged out successfully");
     navigate("/login")
    }, 600);
 
@@ -739,7 +746,8 @@ const {dark,setdark}=useContext(Flagcontext);
    localStorage.removeItem("token2")
 
    setTimeout(() => {
-    alert("logged out successfully");
+    // alert("logged out successfully");
+    toast.success("logged out successfully");
     navigate("/login")
    }, 600);}}>
         <i className="fa-solid fa-right-from-bracket me-3" style={{ marginLeft: 10 + "%", marginTop: 25 + "px", marginBottom: 25 + "px" }}></i>

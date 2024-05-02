@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
 import Notitoggle from '../Notitoggle';
 import { useTheme } from '../context/ThemeContext';
+import { toast } from 'react-toastify';
 
 const Campaigns = (props) => {
   const[flag,setflag]=useState(false);
@@ -137,7 +138,7 @@ elements.forEach(function(element) {
         <span ><i class="fa-solid fa-bell fa-lg me-3"></i>Campaigns Title</span>  <span className='classsec'>  <i class="fa-solid fa-user fa-lg me-3"></i>
          Sender's Name</span>  <span className='createdsec'> <b>10:00 AM</b></span>  
 <div className="btn btn-success cambtn" onClick={()=>{
-   alert("currently in development")
+ toast.success("Campaign Sent Successfully")
 }}><i class="fa-solid fa-paper-plane"></i></div>
 
         </div>
@@ -146,7 +147,7 @@ elements.forEach(function(element) {
         <span ><i class="fa-solid fa-bell fa-lg me-3"></i>Campaigns Title</span>  <span className='classsec' >  <i class="fa-solid fa-user fa-lg me-3"></i>
          Sender's Name</span>  <span className='createdsec' > <b>09:00 AM</b></span>  
          <div className="btn btn-success cambtn" onClick={()=>{
-   alert("currently in development")
+ toast.success("Campaign Sent Successfully")
 }}><i class="fa-solid fa-paper-plane"></i></div>
 
         </div>
@@ -155,7 +156,8 @@ elements.forEach(function(element) {
         <span ><i class="fa-solid fa-bell fa-lg me-3"></i>Campaigns Title</span>  <span  className='classsec'>  <i class="fa-solid fa-user fa-lg me-3"></i>
          Sender's Name</span>  <span className='createdsec' > <b>12:00 AM</b></span>  
          <div className="btn btn-success cambtn" onClick={()=>{
-   alert("currently in development")
+           toast.success("Campaign Sent Successfully")
+  
 }}><i class="fa-solid fa-paper-plane"></i></div>
 
         </div>

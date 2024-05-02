@@ -2,6 +2,7 @@
 import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom';
 import "./signup.css";
+import { toast } from 'react-toastify';
 
 const Signup = (props) => {
     const {showAlert}=props
@@ -19,13 +20,14 @@ const Signup = (props) => {
       let url = '';
 
 if (type === "2"||type==="3") {
-  url = 'http://localhost:5000/auth/registerTeacher';
+  url = 'https://classroombackend-0a5q.onrender.com/auth/registerTeacher';
 } else if (type === "1") {
-  url = 'http://localhost:5000/auth/registerStudent';
+  url = 'https://classroombackend-0a5q.onrender.com/auth/registerStudent';
 }
         if (credentials.password !== credentials.cpassword) {
             setLoading(false);
-            alert("password did not match");
+            // alert("password did not match");
+            toast.error("password did not match");
             return 0;
           }
       
@@ -39,10 +41,10 @@ if (type === "2"||type==="3") {
                 name:credentials.name,
                 email:credentials.email,
                 password:credentials.password,
-                rollno:credentials.rollno,
-                semester:credentials.semester,
-                section:credentials.section,
-                branch:credentials.branch,
+                rollno:(credentials.rollno).toUpperCase(),
+                semester:(credentials.semester).toUpperCase(),
+                section:(credentials.section).toUpperCase(),
+                branch:(credentials.branch).toUpperCase(),
                 childEmail:credentials.childEmail
 
                 
@@ -54,10 +56,12 @@ if (type === "2"||type==="3") {
             setLoading(false);
       
             if(!json.error){
-              localStorage.setItem("token", JSON.stringify(json.signupdata));
+              localStorage.setItem("token", JSON.stringify(json.signupData
+              ));
               localStorage.setItem("token2", JSON.stringify(json.token));
              console.log(json);
-             alert("Registration Successful");
+            //  alert("Registration Successful");
+             toast.success("Registration Successful");
              if(type==="1"){
                navigate('/user1');
              }
@@ -70,18 +74,21 @@ if (type === "2"||type==="3") {
  
            }
            else if(json.error){
-             alert(json.error);
+            //  alert(json.error);
+             toast.error(json.error);
             
            }
            else{
-             alert("Something went wrong");
+            //  alert("Something went wrong");
+             toast.error("Something went wrong");
            }
            setLoading(false);
         
            
          } catch (error) {
           setLoading(false);
-           alert("Internal Server Error");
+          //  alert("Internal Server Error");
+           toast.error("Internal Server Error");
          }
     }
 
@@ -110,7 +117,7 @@ if (type === "2"||type==="3") {
             <div className="mb-3 d-flex" style={{justifyContent:"space-between"}}>
                 <div style={{width:60+"%",display:"inline-block"}}>
                 <label htmlFor="name" className="form-label"><b>Name</b></label>
-                    <input type="text" className="form-control" value={credentials.name} onChange={onChange} id="name" name="name" aria-describedby="emailHelp"  style={{borderRadius:"8px"}} min={3} />
+                    <input type="text" className="form-control" value={credentials.name} onChange={onChange} id="name" name="name" aria-describedby="emailHelp"  style={{borderRadius:"8px"}} minLength={4} />
                     <div id="emailHelp" className="form-text"></div>
                 </div>
                 <div className="ura" style={{}}> 
@@ -143,12 +150,12 @@ if (type === "2"||type==="3") {
             {type=="1" && <div className="mb-3 d-flex type1box" style={{justifyContent:"space-between"}}>
                 <div style={{display:"inline-block"}}>
                 <label htmlFor="name" className="form-label"><b>Your RollNo?</b></label>
-                    <input type="text" className="form-control" value={credentials.rollno} onChange={onChange} id="rollno" name="rollno" aria-describedby="emailHelp"  style={{borderRadius:"8px"}}/>
+                    <input type="text" className="form-control" value={credentials.rollno} onChange={onChange} id="rollno" name="rollno" aria-describedby="emailHelp"  style={{borderRadius:"8px"}} maxLength={8}/>
                     <div id="emailHelp" className="form-text"></div>
                 </div>
                 <div style={{}}> 
                     <label htmlFor="name" className="form-label"><b>Section :</b></label>
-                    <input type="text" className="form-control" value={credentials.section} onChange={onChange} id="section" name="section" aria-describedby="emailHelp" max={1} style={{borderRadius:"8px"}} />
+                    <input type="text" className="form-control" value={credentials.section} onChange={onChange} id="section" name="section" aria-describedby="emailHelp" maxLength={1} style={{borderRadius:"8px"}} minLength={1} />
                </div>
                 <div style={{}}> 
                     <label htmlFor="name" className="form-label"><b>Semester :</b></label>
@@ -156,7 +163,7 @@ if (type === "2"||type==="3") {
                </div>
                 <div style={{}}> 
                     <label htmlFor="name" className="form-label"><b>Branch :</b></label>
-                    <input type="text" className="form-control" value={credentials.branch} onChange={onChange} id="branch" name="branch" aria-describedby="emailHelp" style={{borderRadius:"8px"}} />
+                    <input type="text" className="form-control" value={credentials.branch} onChange={onChange} id="branch" name="branch" aria-describedby="emailHelp" style={{borderRadius:"8px"}} maxLength={3} />
                </div>
                
                 </div>}

@@ -3,6 +3,7 @@ import React,{useState} from 'react'
 import Tabs from './user1/Tabs';
 import { useTheme } from './context/ThemeContext';
 import { useLocation,useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const Notitoggle = () => {
     const[togglenoti,setTogglenoti]=useState(false);
     const { isDarkTheme,gNotifications,gAnnouncements ,update,setUpdate} = useTheme();
@@ -43,7 +44,8 @@ const Notitoggle = () => {
    localStorage.removeItem("token2")
 
    setTimeout(() => {
-    alert("logged out successfully");
+    // alert("logged out successfully");
+    toast.success("logged out successfully")
     navigate("/login")
    }, 500);
 //    props.showAlert("logged out successfully","danger")

@@ -10,6 +10,7 @@ import { useContext } from 'react';
 import Flagcontext from '../context/notes/Flagcontext';
 import Notitoggle from '../Notitoggle';
 import { useTheme } from '../context/ThemeContext';
+import { toast } from 'react-toastify';
 
 const Support = (props) => {
   const {isDarkTheme}=useTheme();
@@ -69,7 +70,7 @@ elements.forEach(function(element) {
       // const { email, password } = credentials;
   
       try {
-        const response = await fetch("http://localhost:5000/api/user/login", {
+        const response = await fetch("https://classroombackend-0a5q.onrender.com/api/user/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -93,10 +94,13 @@ elements.forEach(function(element) {
         
         else {
           // setLoading(false);
-          alert("Invalid Credentials");
+          
+         toast.error("Invalid Credentials");
+
         }
       } catch (error) {
-          alert(error);
+          // alert(error);
+          toast.error("Invalid Credentials");
       }
   }
    
@@ -153,18 +157,21 @@ elements.forEach(function(element) {
       .then(function(response) {
         setLoading(false);
           if (response.ok) {
-            alert("Your message has been sent successfully");
+            // alert("Your message has been sent successfully");
+            toast.success("Your message has been sent successfully");
             console.log('SUCCESS!');
             
           } else {
           
-            alert("failed"+ response.statusText)
-            console.log('FAILED...', response.statusText)
+  
+            toast.error("failed"+ response.statusText);
+          
           }
       })
       .catch(function(error) {
         setLoading(false);
-        alert("failed"+ error.message)
+
+        toast.error("failed"+ error.message);
         console.log('FAILED...', error.message);
       });
     

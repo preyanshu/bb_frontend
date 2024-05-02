@@ -10,6 +10,7 @@ import "./notifications.css"
 import Notitoggle from '../Notitoggle';
 // import { useTheme } from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
+import { toast } from 'react-toastify';
 
 const Feedback= (props) => {
   const[flag,setflag]=useState(false);
@@ -115,18 +116,21 @@ elements.forEach(function(element) {
       .then(function(response) {
         setLoading(false);
           if (response.ok) {
-            alert("Your message has been sent successfully");
+           
+            toast.success("Your message has been sent successfully");
             console.log('SUCCESS!');
             
           } else {
           
-            alert("failed"+ response.statusText)
+         
+            toast.error("failed"+ response.statusText);
             console.log('FAILED...', response.statusText)
           }
       })
       .catch(function(error) {
         setLoading(false);
-        alert("failed"+ error.message)
+
+        toast.error("failed"+ error.message);
         console.log('FAILED...', error.message);
       });
     

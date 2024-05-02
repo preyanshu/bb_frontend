@@ -34,6 +34,8 @@ import Flagstate from "./components/context/notes/Flagstate";
 import AOS from "aos";
 import { ThemeProvider } from './components/context/ThemeContext';
 import { useLocation } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -145,6 +147,8 @@ function App() {
               {/* <Route exact path="/chart1" element={<Userpanel showAlert={showAlert}/>} /> */}
 
     </Routes>
+    <ToastContainer />
+
     </div>
     
 </Router>
