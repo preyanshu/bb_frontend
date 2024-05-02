@@ -132,7 +132,7 @@ const Student_attendence = (props) => {
       };
 
       async function linkSheet(classId) {
-        const url = 'http://localhost:5000/spreadsheet/link-spreadsheet';
+        const url = 'https://classroombackend-0a5q.onrender.com/spreadsheet/link-spreadsheet';
     
         const requestData = {
             classId: classId
@@ -199,7 +199,7 @@ const Student_attendence = (props) => {
             body: JSON.stringify(requestBody)
           };
       
-          const response = await fetch("http://localhost:5000/teacher/createClass", requestOptions);
+          const response = await fetch("https://classroombackend-0a5q.onrender.com/teacher/createClass", requestOptions);
           console.log("done");
       
           if (!response.ok) {
@@ -243,7 +243,7 @@ const Student_attendence = (props) => {
                 })
             };
     
-            const response = await fetch('http://localhost:5000/teacher/removestudent', requestOptions);
+            const response = await fetch('https://classroombackend-0a5q.onrender.com/teacher/removestudent', requestOptions);
             const data = await response.json();
     
             if (!response.ok) {
@@ -390,7 +390,7 @@ const Student_attendence = (props) => {
           }
         };
     
-        const response = await fetch(`http://localhost:5000/teacher/viewClasses?name=${token.name}`, requestOptions);
+        const response = await fetch(`https://classroombackend-0a5q.onrender.com/teacher/viewClasses?name=${token.name}`, requestOptions);
     
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -435,7 +435,7 @@ const Student_attendence = (props) => {
           // You can include a 'body' field here for POST requests if sending data
         };
     
-        const response = await fetch('http://localhost:5000/teacher/searchStudents', requestOptions);
+        const response = await fetch('https://classroombackend-0a5q.onrender.com/teacher/searchStudents', requestOptions);
         const data = await response.json();
     
         if (data.error) {
@@ -475,7 +475,7 @@ const Student_attendence = (props) => {
           // You can include a 'body' field here for POST requests if sending data
         };
     
-        const response = await fetch(`http://localhost:5000/teacher/viewAssignmentspecific/${e._id}`, requestOptions);
+        const response = await fetch(`https://classroombackend-0a5q.onrender.com/teacher/viewAssignmentspecific/${e._id}`, requestOptions);
         const data = await response.json();
     
         if (data.error) {
@@ -514,7 +514,7 @@ const Student_attendence = (props) => {
           // You can include a 'body' field here for POST requests if sending data
         };
     
-        const response = await fetch(`http://localhost:5000/teacher/viewAnnouncements/${e._id}`, requestOptions);
+        const response = await fetch(`https://classroombackend-0a5q.onrender.com/teacher/viewAnnouncements/${e._id}`, requestOptions);
         const data = await response.json();
     
         if (data.error) {
@@ -567,7 +567,7 @@ const addassignment = async () => {
       body: JSON.stringify( {classId:current._id,title:modal1.title,dueDate:modal1.dueDate,description:modal1.description})
       // You can include a 'body' field here for POST requests if sending data
     };
-    const url = "http://localhost:5000/teacher/addAssignment";  
+    const url = "https://classroombackend-0a5q.onrender.com/teacher/addAssignment";  
 
     const response = await fetch(url, requestOptions);
     const result = await response.json();
@@ -609,7 +609,7 @@ async function removeClass(classId, email,token) {
           })
       };
 
-      const response = await fetch('http://localhost:5000/teacher/removeclass', requestOptions);
+      const response = await fetch('https://classroombackend-0a5q.onrender.com/teacher/removeclass', requestOptions);
       const data = await response.json();
 
       if (!response.ok) {
@@ -642,7 +642,7 @@ const addannouncement = async () => {
       body: JSON.stringify( {classId:current._id,title:modal2.title,content:modal2.description})
       // You can include a 'body' field here for POST requests if sending data
     };
-    const url = "http://localhost:5000/teacher/addAnnouncement";  
+    const url = "https://classroombackend-0a5q.onrender.com/teacher/addAnnouncement";  
 
     const response = await fetch(url, requestOptions);
     const result = await response.json();
@@ -1205,7 +1205,7 @@ removeStudentFromClass(classId, studentId,JSON.parse(localStorage.getItem("token
   }
   
   // Usage example:
-  const url = 'http://localhost:5000/teacher/addStudentToClass';
+  const url = 'https://classroombackend-0a5q.onrender.com/teacher/addStudentToClass';
   const headers = {
       'Accept': '*/*',
       'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
