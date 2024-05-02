@@ -308,10 +308,10 @@ height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white
    <Graph type="line" lineData={lineData}></Graph>
   
 
-   <div style={{marginLeft:2+"vw"}}><h6><b>Subject wise attendance</b></h6>
+   <div style={{marginLeft:"20px"}}><h6><b>Subject wise attendance</b></h6>
    </div>
    <hr />
-   <div style={{marginLeft:2+"vw"}}>
+   <div style={{marginLeft:"20px"}}>
    <i class="fa-regular fa-clock me-3"></i>
  
     updates every 5 sec
@@ -326,10 +326,10 @@ height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white
 height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",paddingTop:"30px",paddingBottom:"30px",marginBottom:"20px"}}>
       
         <Graph backgroundColor="#914EC2" type="bar" barData={barData}></Graph>
-        <div style={{marginLeft:2+"vw"}}><h6><b>Subject wise assignments</b></h6>
+        <div style={{marginLeft:"20px"}}><h6><b>Subject wise assignments</b></h6>
    </div>
    <hr />
-   <div style={{marginLeft:2+"vw"}}>
+   <div style={{marginLeft:"20px"}}>
    <i class="fa-regular fa-clock me-3"></i>
  
    updates every 5 sec
@@ -343,10 +343,10 @@ height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white
         <Graph backgroundColor="#303433" type="line" lineData={marksData} ></Graph>
   
 
-   <div style={{marginLeft:2+"vw"}}><h6><b>Subject wise marks</b></h6>
+   <div style={{marginLeft:"20px"}}><h6><b>Subject wise marks</b></h6>
    </div>
    <hr />
-   <div style={{marginLeft:2+"vw"}}>
+   <div style={{marginLeft:"20px"}}>
    <i class="fa-regular fa-clock me-3"></i>
  
    updates every 5 sec

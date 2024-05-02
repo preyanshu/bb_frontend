@@ -320,10 +320,10 @@ return(
 height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white",borderRadius:13+"px",paddingTop:"30px",paddingBottom:"30px",marginBottom:"20px"}}>
         <div className="mt-4">
         <Graph backgroundColor="" type="bar" textcolor={isDarkTheme?"white":"black"} style={{}} barData={barData}></Graph></div>
-        <div style={{marginLeft:2+"vw"}}><h6><b>Assignments in Class</b></h6>
+        <div style={{marginLeft:"20px"}}><h6><b>Assignments in Class</b></h6>
    </div>
    <hr />
-   <div style={{marginLeft:2+"vw"}}>
+   <div style={{marginLeft:"20px"}}>
    <i class="fa-regular fa-clock me-3"></i>
  
     updates every 5 sec
@@ -338,10 +338,10 @@ height:"fit-content",width:300+"px",backgroundColor:isDarkTheme?"#21222D":"white
         <Graph backgroundColor="" textcolor={isDarkTheme?"white":"black"} type="line" lineData={lineData}></Graph></div>
   
 
-   <div style={{marginLeft:2+"vw",marginTop:1+"vw"}}><h6><b>Students in Class</b></h6>
+   <div style={{marginLeft:"20px",marginTop:1+"vw"}}><h6><b>Students in Class</b></h6>
    </div>
    <hr />
-   <div style={{marginLeft:2+"vw"}}>
+   <div style={{marginLeft:"20px"}}>
    <i class="fa-regular fa-clock me-3"></i>
  
    updates every 5 sec
