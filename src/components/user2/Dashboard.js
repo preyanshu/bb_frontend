@@ -15,7 +15,7 @@ const Dashboard = (props) => {
   const[flag,setflag]=useState(false);
   const {flag2,setflag2}=useContext(Flagcontext);
   const [teacherEmail, setEmail] = useState("");
-  const {isDarkTheme,assignmentsLength}=useTheme();
+  const {isDarkTheme,assignmentsLength,gAnnouncements,gNotifications,checkForUpdates}=useTheme();
  
 
     
@@ -35,6 +35,25 @@ const Dashboard = (props) => {
     }
 
   },[])
+  
+  useEffect(() => {
+    
+    if(1){
+      const interval = setInterval(() => {
+        
+        var a = gAnnouncements;
+    var b= gNotifications;
+    if((localStorage.getItem('token') && localStorage.getItem('token2'))){
+      checkForUpdates(a,b,1);
+
+    }
+        
+      }, 3000); // Check every 60 seconds
+  
+      return () => clearInterval(interval); // Cleanup the interval on component unmount
+    }
+   
+  }, []);
 
   const [barData, setBarChartData] = useState([]);
   const [lineData, setLineChartData] = useState([]);

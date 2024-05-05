@@ -24,16 +24,27 @@ export const ThemeProvider = ({ children }) => {
 // let teacher =0;
 const [teacher,setTeacher]=useState(0);
 
-useEffect(()=>{
-  const text = window.location.href;
- setText(text);
-if (text.includes("user1") || text.includes("user3")) {
- setTeacher(0);
-} else {
-  setTeacher(1);
-}
+useEffect(() => {
+  const fetchData = () => {
+    const currentText = window.location.href;
+    setText(currentText);
 
-},[])
+    if (currentText.includes("user1") || currentText.includes("user3")) {
+      setTeacher(0);
+    } else {
+      setTeacher(1);
+    }
+  };
+
+  // Fetch data initially
+  fetchData();
+
+  // Set up interval to fetch data every 5 seconds
+  const intervalId = setInterval(fetchData, 2500); // 5000 milliseconds = 5 seconds
+
+  // Clean up interval on component unmount
+  return () => clearInterval(intervalId);
+}, []);
 
 
 
@@ -54,7 +65,7 @@ if (text.includes("user1") || text.includes("user3")) {
  
 
 
-  const fetchassignment = async (e) => {
+  const fetchassignment = async (e,g) => {
 
     console.log("e",e);
     console.log("emailid",e.emailid) ;
@@ -75,7 +86,7 @@ if (text.includes("user1") || text.includes("user3")) {
         // You can include a 'body' field here for POST requests if sending data
       };
 
-      const url = (teacher) ? `https://classroombackend-0a5q.onrender.com/teacher/viewAssignments/${e.emailid}` : `https://classroombackend-0a5q.onrender.com/student/viewAssignments/${e.emailid}`;
+      const url = (teacher||g) ? `https://classroombackend-0a5q.onrender.com/teacher/viewAssignments/${e.emailid}` : `https://classroombackend-0a5q.onrender.com/student/viewAssignments/${e.emailid}`;
   
       const response = await fetch(url, requestOptions);
       const data = await response.json();
@@ -108,7 +119,7 @@ if (text.includes("user1") || text.includes("user3")) {
   };
 
 
-  const fetchannouncement = async (requestBody,token) => {
+  const fetchannouncement = async (requestBody,token,g) => {
     try {
        
         // const token2 = (teacher) ? `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YWQ4NGJmN2U2OGI4MDUwNTcxNmE1OCIsImlhdCI6MTcwNTg3MDUyN30.Nk0EktNhRHXlBTGJgXjozXuIxnUhu-24KHBl838lMpQ` : `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZjMxZTJiOTRmMjlkNTI5ZjA1MGQ0MyIsImlhdCI6MTcxMDQzMjYxMH0.nFlfZLUgVvlyVX9yBo09yJ-KpipYqLaI-uO0FNKoeII`;
@@ -122,7 +133,7 @@ if (text.includes("user1") || text.includes("user3")) {
             body: JSON.stringify(requestBody) // Add the request body here
         };
 
-        const url = (teacher) ? `https://classroombackend-0a5q.onrender.com/teacher/viewAnnouncementsallteacher` : `https://classroombackend-0a5q.onrender.com/student/viewAnnouncementsall`;
+        const url = (teacher||g) ? `https://classroombackend-0a5q.onrender.com/teacher/viewAnnouncementsallteacher` : `https://classroombackend-0a5q.onrender.com/student/viewAnnouncementsall`;
 
         const response = await fetch(url, requestOptions);
 
@@ -157,8 +168,8 @@ if (text.includes("user1") || text.includes("user3")) {
       async function fetchData() {
         setloading_ano(true);
         setloading_noti(true);
-        a= await fetchannouncement({emailid:JSON.parse(localStorage.getItem('token')).email},JSON.parse(localStorage.getItem('token2')));
-        b= await fetchassignment({emailid:JSON.parse(localStorage.getItem('token')).email,token:JSON.parse(localStorage.getItem('token2'))});
+        a= await fetchannouncement({emailid:JSON.parse(localStorage.getItem('token')).email},JSON.parse(localStorage.getItem('token2')),0);
+        b= await fetchassignment({emailid:JSON.parse(localStorage.getItem('token')).email,token:JSON.parse(localStorage.getItem('token2'))},0);
         console.log("assignment",a);
         if(a && b){
           SetGAnnouncements(a);
@@ -185,12 +196,22 @@ if (text.includes("user1") || text.includes("user3")) {
 
   },[])
 
-  const checkForUpdates = async (gAnnouncements,gNotifications) => {
+  const checkForUpdates = async (gAnnouncements,gNotifications,g) => {
     try{
       let newNotifications=[];
-    newNotifications = await fetchassignment({emailid:JSON.parse(localStorage.getItem('token')).email,token:JSON.parse(localStorage.getItem('token2'))});
+    if(g){
+      newNotifications = await fetchassignment({emailid:JSON.parse(localStorage.getItem('token')).email,token:JSON.parse(localStorage.getItem('token2')),},1);
+    }
+    else{
+      newNotifications = await fetchassignment({emailid:JSON.parse(localStorage.getItem('token')).email,token:JSON.parse(localStorage.getItem('token2'))},0);
+    }
     let newAnnouncements=[];
-    newAnnouncements = await fetchannouncement({emailid:JSON.parse(localStorage.getItem('token')).email},JSON.parse(localStorage.getItem('token2')));
+    if(g){
+      newAnnouncements = await fetchannouncement({emailid:JSON.parse(localStorage.getItem('token')).email},JSON.parse(localStorage.getItem('token2')),1);
+    }
+    else{
+      newAnnouncements = await fetchannouncement({emailid:JSON.parse(localStorage.getItem('token')).email},JSON.parse(localStorage.getItem('token2')),0);
+    }
 
     // const update = [...newNotifications, ...newAnnouncements];
 
@@ -237,13 +258,13 @@ if (text.includes("user1") || text.includes("user3")) {
   
   useEffect(() => {
     
-    if(flag && localStorage.getItem('token') && localStorage.getItem('token2')){
+    if(1){
       const interval = setInterval(() => {
         
         var a = gAnnouncements;
     var b= gNotifications;
     if((localStorage.getItem('token') && localStorage.getItem('token2'))){
-      checkForUpdates(a,b);
+      checkForUpdates(a,b,0);
 
     }
         
@@ -252,9 +273,9 @@ if (text.includes("user1") || text.includes("user3")) {
       return () => clearInterval(interval); // Cleanup the interval on component unmount
     }
    
-  }, [flag]);
+  }, []);
   return (
-    <ThemeContext.Provider value={{ isDarkTheme, toggleTheme ,Event,setevents,date,setdate,current,setCurrent,gAnnouncements,gNotifications,SetGAnnouncements,gAnnouncements,SetGNotifications,update,setUpdate,loading_ano,loading_noti,assignmentsLength}}>
+    <ThemeContext.Provider value={{ isDarkTheme, toggleTheme ,Event,setevents,date,setdate,current,setCurrent,gAnnouncements,gNotifications,SetGAnnouncements,gAnnouncements,SetGNotifications,update,setUpdate,loading_ano,loading_noti,assignmentsLength,checkForUpdates}}>
       {children}
     </ThemeContext.Provider>
   );
