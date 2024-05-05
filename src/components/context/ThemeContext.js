@@ -26,7 +26,7 @@ const [teacher,setTeacher]=useState(0);
 
 useEffect(()=>{
   const text = window.location.href;
-//  setText(text);
+ setText(text);
 if (text.includes("user1") || text.includes("user3")) {
  setTeacher(0);
 } else {
